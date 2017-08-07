@@ -1,0 +1,79 @@
+/* imageCropped demo */
+*, *:before, *:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+header{
+    font-size:18px;
+    text-align: center;
+    padding: 35px 0;
+}
+img{
+    max-width: 100%;
+}
+.main_area{
+	max-width: 900px;
+	margin: 0 auto;
+	padding-bottom: 60px;
+}
+.edit_area{
+	position: relative;
+	width: 530px;
+	height: 530px;
+	background-color: rgb(250,250,250);
+	float: left;
+}
+.operating_area{
+	float: left;
+	padding-left: 90px;
+	padding-top: 205px;
+	text-align: left;
+}
+ /* rotate style*/
+ #rotate_right,#rotate_left{display: inline-block;padding: 5px;cursor:pointer;}
+ #rotate_right::selection,
+ #rotate_left::selection{
+ 	background: transparent;
+ }
+.rotate{display: inline-block; width: 11px; height: 11px; background-image: url(../images/rotate_source.png);cursor:pointer;}
+.ratate_left{background-position: -11px 0;margin-right: 15px;}
+.ratate_left:hover{background-position: 0 0;}
+.ratate_right{background-position: 11px 0;}
+.ratate_right:hover{background-position: 22px 0;}
+
+.btn-wrap{
+    text-align: center;
+    margin-bottom: 25px;
+}
+.edit-btn{
+    display: inline-block;
+    border: 1px solid #000;
+    padding: 10px 30px 10px 30px;
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 1s;
+    -moz-transition: background 1s;
+    -webkit-transition: background 1s;
+    -o-transition: background 1s;
+}
+.croppedImage{
+    margin: 0 auto;
+    max-width: 900px;
+    min-height: 200px;
+    background-color: rgba(230,230,230,1);
+    padding: 5px;
+}
+.croppedImage img{
+    width: 296px;
+    padding: 5px;
+}
+
+.clearfix:after {
+    clear: both;
+}
+.clearfix:before, .clearfix:after {
+    content: " ";
+    display: table;
+}

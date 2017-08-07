@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>图片编辑裁剪Demo</title>
+
+	<link href="../common/css/normalize.css" rel="stylesheet" type='text/css'>
+	<link href="css/cropbox.css" rel="stylesheet" type='text/css'>
+	<link href="css/Slider.css" rel="stylesheet" type='text/css'>
+
+	<link href="css/demo.css" rel="stylesheet" type='text/css'>
+
+</head>
+
+<body>
+
+	<header>
+		图片编辑Demo展示
+	</header>
+
+	<div class="main_area clearfix">
+		<div class="edit_area">
+			<img id="cropImage" src="images/test-large.jpg" alt="cropImage" />
+			<!--
+				<div class="crop-area postcard">
+					<div class="cropbox-container">
+						<div class="cropbox-canvas"></div>
+				         <div class="imageBox"></div>
+				         <div class="cropBox-wrap">
+				        	<div class="cropBox">
+								<button class="warning-tooltip-warning" data-toggle="tooltip" data-placement="bottom"></button>
+								<button class="warning-tooltip-error" data-toggle="tooltip" data-placement="bottom"></button>
+							</div>
+				         </div>
+				         <div class="spinner" style="display: none">Loading...</div>'
+					</div>
+				</div>
+			-->
+		</div>
+		<div class="operating_area">
+			<div class="nbfont12 nbfont_en pb10">Rotate 90°</div>
+			<div id="rotate_left">
+				<span class="rotate ratate_left"></span>
+			</div>
+			<div id="rotate_right">
+				<span class="rotate ratate_right"></span>
+			</div>
+
+			<div class="nbfont12 pt25 nbfont_en pb10">Zoom</div>
+			<div id="Slider-zoom" class="slider">
+				<div class="background-line"></div>
+				<div id="Bar-zoom" class="bar">
+					<div class="bar-inner"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="btn-wrap nbfont14">
+		<!--<a id="cancel_btn" href="javascript:void(0)" class="edit-btn cancel">
+			<img src="../../common/images/edit_cancel.png">取消
+		</a>-->
+		<a id="save_btn" href="javascript:void(0)" class="edit-btn">裁剪</a>
+	</div>
+
+	<!-- 裁剪后的图片展示区块 -->
+	<div class="croppedImage" id="croppedImage">
+
+	</div>
+
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script type="text/javascript" src="js/Slider.js"></script>
+	<script type="text/javascript" src="js/cropbox.js"></script>
+
+	<script type="text/javascript" src="js/demo.js"></script>
+
+</body>
+
+</html>

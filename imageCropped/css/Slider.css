@@ -1,0 +1,33 @@
+/* slider about */
+.slider{
+    width: 280px; 
+    height:10px; 
+    margin:10px 0;
+    position: relative
+}
+.background-line{
+    position:absolute;
+    height: 1px;
+    width:100%;
+    top:4px;
+    left: 0;
+    background-color: #000
+}
+.bar {
+    width:10px; 
+    height:10px;  
+    background-color:#000;
+    border-radius: 10px;
+}
+.bar:after {
+    content: "after";
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    opacity: 0;
+    background-color: yellow;
+    color: red;
+    font-weight: bold;
+}
