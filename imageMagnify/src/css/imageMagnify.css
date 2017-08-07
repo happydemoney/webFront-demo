@@ -1,0 +1,33 @@
+.magnify{
+    position: relative;
+}
+.magnify .large{
+    position: absolute;
+    background-repeat: no-repeat;
+    display: none;
+}
+/* 在这里我们来设置放大镜的样式 */
+.magnify.magnifier .large {
+	width: 180px;
+	height: 180px;
+    border: 2px solid #ffffff;
+    border-radius: 100%;
+    /* 这里使用多重阴影、来实现玻璃的效果 */
+	box-shadow: 0 0 0 3px rgba(150,150,150,0.1),0 0 0 3px rgba(150,150,150,0.1);
+}
+.magnify.magnify-inner{
+    /* cursor: url(ico/enlarge.png),auto; */
+}
+.magnify.magnify-inner.active{
+    /* cursor: url(ico/minify.png),auto; */
+}
+.magnify.magnify-inner .large{
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.magnify img{
+    max-width: 100%;
+    display: block;
+}

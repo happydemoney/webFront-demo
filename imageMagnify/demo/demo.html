@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>image magnify | 图片放大</title>
+    <meta name="keywords" content="图片放大 , image magnify">
+    <meta name="description" content="图片放大 , image magnify">
+
+    <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="author" content="monkey">
+    <meta name="renderer" content="webkit">
+
+    <!-- Development -->
+    <link rel="stylesheet" type="text/css" href="../src/css/imageMagnify.css">
+
+    <!-- Production -->
+    <!-- <link rel="stylesheet" type="text/css" href="../dist/css/imageMagnify.min.css"> -->
+    <style type="text/css">
+        .magnify-wrap {
+            display: inline-block;
+            width: 500px;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="magnify-wrap">
+        <dl>
+            <dt>imageMagnify</dt>
+            <dd>HTML:</dd>
+            <dd>
+                &lt;div id="magnify1" class="magnify" data-image-src="**" data-magnify-src="***" &gt; &lt;/div&gt;
+            </dd>
+            <dd>JS:</dd>
+            <dd>
+                <code>
+                    $('#magnify1').imageMagnify();
+                </code>
+            </dd>
+        </dl>
+        <div id="magnify1" class="magnify" data-image-src="https://cdn.memorieslab.com//images/collection/prints/Postcard/postcard-colour-1.jpg"
+            data-magnify-src="https://cdn.memorieslab.com//images/collection/prints/Postcard/postcard-colour-1-large.jpg">
+        </div>
+    </div>
+
+    <div class="magnify-wrap">
+        <dl>
+            <dt>imageMagnify</dt>
+            <dd>HTML:</dd>
+            <dd>
+                &lt;div id="magnify2" class="magnify" data-image-src="**" data-magnify-src="***" &gt; &lt;/div&gt;
+            </dd>
+            <dd>JS:</dd>
+            <dd>
+                <code>
+                $('#magnify2').imageMagnify({ 'type': 'magnify-inner' });
+            </code>
+            </dd>
+        </dl>
+        <div id="magnify2" class="magnify" data-image-src="https://cdn.memorieslab.com//images/collection/prints/Postcard/postcard-colour-2.jpg"
+            data-magnify-src="https://cdn.memorieslab.com//images/collection/prints/Postcard/postcard-colour-2-large.jpg">
+        </div>
+    </div>
+
+    <!-- 百度 cdn -->
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <!-- Development -->
+    <script type="text/javascript" src="../src/js/imageMagnify.js"></script>
+
+    <!-- Production -->
+    <!-- <script type="text/javascript" src="../dist/js/imageMagnify.min.js"></script> -->
+
+    <script type="text/javascript">
+        $(function () {
+            $('#magnify1').imageMagnify();
+            $('#magnify2').imageMagnify({ 'type': 'magnify-inner' });
+        });
+    </script>
+</body>
+
+</html>
