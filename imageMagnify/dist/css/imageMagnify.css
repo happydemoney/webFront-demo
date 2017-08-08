@@ -1,1 +1,0 @@
-.magnify{position:relative}.magnify .large{position:absolute;background-repeat:no-repeat;display:none}.magnify.magnifier .large{width:180px;height:180px;border:2px solid #fff;border-radius:100%;box-shadow:0 0 0 3px rgba(150,150,150,.1),0 0 0 3px rgba(150,150,150,.1)}.magnify.magnify-inner .large{top:0;left:0;right:0;bottom:0}.magnify img{max-width:100%;display:block}
