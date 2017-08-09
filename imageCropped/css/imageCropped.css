@@ -1,4 +1,4 @@
-.crop-area{
+.imageCropped-wrapper{
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -9,16 +9,16 @@
     box-shadow: 0px 5px 5px rgba(0,0,0,0.1), /*底边阴影*/ 5px 0 5px rgba(0,0,0,0.1);
     background-color: #fff;
 }
-/* .crop-area.horizontal / .crop-area.vertical */
-.crop-area,
-.crop-area.postcard{
+/* .imageCropped-wrapper.horizontal / .imageCropped-wrapper.vertical */
+.imageCropped-wrapper,
+.imageCropped-wrapper.postcard{
 	width: 444px;
 	height: 315px;
 	margin-left: -222px;
 	margin-top: -157.5px;
 	padding: 12px;
 }
-.cropbox-container{
+.imageCropped-container{
     position: relative;
     width: 100%;
     height: 100%;
@@ -29,30 +29,23 @@
     background-repeat: no-repeat;
     background-image: url(images/loading.gif);
 }
-.cropbox-container .cropbox-canvas,
-.cropbox-container .imageBox{
+.imageCropped-container .imageCropped-canvasBox,
+.imageCropped-container .imageCropped-imageBox{
     position: absolute;
     top:0;
     left:0;
     right: 0;
     bottom: 0;
 }
-.cropbox-container .cropbox-canvas canvas,
-.cropbox-container .cropbox-canvas img,
-.cropbox-container .imageBox img{
+.imageCropped-container .imageCropped-canvasBox canvas,
+.imageCropped-container .imageCropped-canvasBox img,
+.imageCropped-container .imageCropped-imageBox img{
     max-width: 100%;
 }
-.cropbox-hidden{
+.imageCropped-hidden{
     display: none !important;
 }
-.cropbox-container .cropBox-wrap{
-    position: relative;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-   /*  box-shadow: 0 0 0 200px #dfdfdf; */
-}
-.cropbox-container .cropBox{
+.imageCropped-container .imageCropped-cropBox{
     position: absolute;
     left:0;
     top:0;
@@ -66,10 +59,10 @@
     background-position: 95% 5%;
     background-repeat: no-repeat;
 }
-.cropbox-container .cropBox.warning{
+.imageCropped-container .imageCropped-cropBox.warning{
 	background-image: url(images/mark_pixel_warning.png);
 }
-.cropbox-container .cropBox.error{
+.imageCropped-container .imageCropped-cropBox.error{
 	background-image: url(images/mark_pixel_low.png);
 }
 .warning-tooltip-error,
@@ -81,12 +74,12 @@
 	right: -1000px;
 	top: -300px;
 }
-.cropbox-container .cropBox.error .warning-tooltip-error,
-.cropbox-container .cropBox.warning .warning-tooltip-warning{
+.imageCropped-container .imageCropped-cropBox.error .warning-tooltip-error,
+.imageCropped-container .imageCropped-cropBox.warning .warning-tooltip-warning{
 	right: 5%;
 	top: 5%;
 }
-.cropbox-container .spinner{
+.imageCropped-container .spinner{
     position: absolute;
     top: 0;
     left: 0;
@@ -99,7 +92,7 @@
 /* 超小屏幕（手机，小于 768px） */
 @media (max-width: 767px){
 
-	.crop-area.postcard{
+	.imageCropped-wrapper.postcard{
 	    width: 300px;
 		height: 214px;
 		margin-left: -150px;
