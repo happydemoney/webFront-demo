@@ -4,20 +4,20 @@ image cropped is a plugins for image cropped base on Jquery.
 
 ## events
 
-*ready
+*   ready
 --  crop image already load.
-*cropstart
+*   cropstart
 --  mousedown / touchstart on the crop iamge.
-*cropmove
+*   cropmove
 --  mousemove / touchmove on the crop iamge.
-*cropend
+*   cropend
 --  mouseup / touchend on the crop iamge.
 
 ## optios
 
-*aspectRatio: 16/9
+*   aspectRatio: 16/9
 --  the aspectRatio of the crop area.
-*domStyle: {containerWidth: 320,containerHeight:180}
+*   domStyle: {containerWidth: 320,containerHeight:180}
 --  the crop area dom style(width and height or only width)
 
 ## code
