@@ -2,11 +2,7 @@
 var configure = {
     editCropper: null,
     SliderZoom: null
-}, // 全局变量
-    oMinRatio = {
-        minRatio_horizontal: 1,
-        minRatio_vertical: 1
-    };
+};
 $(document).ready(function () {
 
     initPages();
@@ -32,14 +28,27 @@ function croppedImage() {
 */
 function initPages() {
     var options = {
-        "productType": 'postcard',
-        "data": {
+        data: {
             ratio: 1.1,
             rotate: 0
+        },
+        domStyle: {
+            containerWidth: 320
+        },
+        aspectRatio: 160 / 99,
+        // 编辑图片加载完成之后的的事件
+        ready: cropReady,
+        cropstart: function () {
+            console.log('cropstart');
+        },
+        cropmove: function () {
+            console.log('cropmove');
+        },
+        cropend: function () {
+            console.log('cropend');
         }
     };
 
-    // configure.editCropper = $('#cropImage').cropbox(options);
     configure.editCropper = $('#cropImage').imageCropped(options);
 
     configure.SliderZoom = new Slider("Slider-zoom", "Bar-zoom", {
@@ -50,23 +59,19 @@ function initPages() {
             configure.editCropper.zoom(this.GetValue() / 100);
         }
     });
+}
+/**
+ *  裁剪就绪事件
+*/
+function cropReady() {
 
-    imageInitRatio($('#cropImage')[0].src, 444, 315, function (minRatio_horizontal, minRatio_vertical) {
+    var oMinRatio;
 
-        var curPercent = 0,
-            curMinRatio,
-            curRatio,
-            ratioDiff,
-            rotate;
+    oMinRatio = configure.editCropper.getZoomData();
 
-        oMinRatio.minRatio_horizontal = minRatio_horizontal;
-        oMinRatio.minRatio_vertical = minRatio_vertical;
-
-        curPercent = minRatio_horizontal;
-        configure.SliderZoom.MinValue = parseFloat(minRatio_horizontal * 100, 10);
-        configure.SliderZoom.MaxValue = parseFloat(1.00 * 100, 10);
-        configure.SliderZoom.SetValue(curPercent * 100);
-    });
+    configure.SliderZoom.MinValue = parseFloat(oMinRatio.minRatio_horizontal * 100, 10);
+    configure.SliderZoom.MaxValue = parseFloat(1.00 * 100, 10);
+    configure.SliderZoom.SetValue(oMinRatio.minRatio_horizontal * 100);
 }
 
 /**
@@ -77,7 +82,10 @@ function rotate() {
     var curRatio,
         rotate,
         curMinRatio,
-        curId = $(this).attr('id');
+        curId = $(this).attr('id'),
+        oMinRatio;
+
+    oMinRatio = configure.editCropper.getZoomData();
 
     if (curId == 'rotate_right') {
         configure.editCropper.rotate(90);
@@ -103,40 +111,4 @@ function rotate() {
     } else {
         configure.SliderZoom.SetValue(curRatio * 100);
     }
-}
-
-/***
- * 求当前图片的最小的合适缩放比率
- **/
-function imageInitRatio(imageData, wrapWidth, wrapheight, callback) {
-
-    var image = new Image(),
-        sourceWidth = 0,
-        sourceHeight = 0,
-        widthRatio = 0,
-        heightRatio = 0,
-        _widthRatio = 0,
-        _heightRatio = 0,
-        callback = callback || function () { },
-        minRatio_horizontal,
-        minRatio_vertical;
-
-    image.onload = function () {
-
-        sourceWidth = image.width,
-            sourceHeight = image.height;
-
-        widthRatio = wrapWidth / sourceWidth;
-        heightRatio = wrapheight / sourceHeight;
-
-        _widthRatio = wrapWidth / sourceHeight;
-        _heightRatio = wrapheight / sourceWidth;
-
-        minRatio_horizontal = widthRatio > heightRatio ? widthRatio : heightRatio;
-        minRatio_vertical = _widthRatio > _heightRatio ? _widthRatio : _heightRatio;
-
-        callback(minRatio_horizontal, minRatio_vertical);
-    };
-
-    image.src = imageData;
 }

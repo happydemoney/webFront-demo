@@ -35,7 +35,6 @@
             ACTIVE = 'active',
             ACTIVE_SEL = '.' + ACTIVE;
 
-
         // Creating some defaults, extending them with any options that were provided - 
         options = $.extend({
             debug: true,
@@ -65,6 +64,25 @@
                 warning: 1440,
                 error: 900
             },
+
+            // Define the aspect ratio of the crop box
+            aspectRatio: NaN,   // 16/9 - 5/4 - 4/3 - 3/2 - 2/1 - 1/1 
+
+            // dom style
+            domStyle: {
+                containerWidth: 400,
+                containerHeight: 300
+            },
+
+            // Shortcuts of events
+            ready: null,
+            cropstart: null,
+            cropmove: null,
+            cropend: null,
+            crop: null,
+            zoom: null,
+
+            // dom node
             container: null,    // 裁剪区域父区域对象
             canvasBox: null,    // 裁剪canvas对象
             imageBox: null,     // 裁剪图片对象
@@ -74,33 +92,46 @@
 
         var isTouchDevice = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|playbook|silk|BlackBerry|BB10|Windows Phone|Tizen|Bada|webOS|IEMobile|Opera Mini)/);
         var isTouch = (('ontouchstart' in window) || (navigator.msMaxTouchPoints > 0) || (navigator.maxTouchPoints));
-
         var imageSrc = '';
-        // 初始化
-        var _init = function () {
-            var structure = '<div class="' + WRAPPER + '">\
+
+        var isNumber = function (param) {
+            return typeof param === 'number' && !isNaN(param);
+        },
+            // 初始化    
+            _init = function () {
+                var structure = '<div class="' + WRAPPER + '">\
                                 <div class="'+ CONTAINER + '">\
                                     <div class="'+ CANVASBOX + '"></div>\
                                     <div class="'+ IMAGEBOX + '"></div>\
                                     <div class="'+ CROPBOX + '">\
-                                        <button class="warning-tooltip-warning" data-toggle="tooltip" data-placement="bottom" title="裁剪尺寸较小"></button>\
-                                        <button class="warning-tooltip-error" data-toggle="tooltip" data-placement="bottom" title="裁剪尺寸过小"></button>\
+                                        <button tabindex="-1" class="warning-tooltip-warning" data-toggle="tooltip" data-placement="bottom" title="裁剪尺寸较小"></button>\
+                                        <button tabindex="-1" class="warning-tooltip-error" data-toggle="tooltip" data-placement="bottom" title="裁剪尺寸过小"></button>\
                                     </div>\
                                     <div class="spinner" style="display: none">Loading...</div>\
                                 </div>\
                             </div>',
-                $wrapper;
+                    $wrapper,
+                    containerWidth,
+                    containerHeight;
 
-            imageSrc = el[0].src;
-            el.after(structure).addClass('imageCropped-hidden');
-            $wrapper = el.siblings(WRAPPER_SEL);
+                imageSrc = el[0].src;
+                el.after(structure).addClass('imageCropped-hidden');
+                $wrapper = el.siblings(WRAPPER_SEL);
 
-            options.container = $wrapper.find(CONTAINER_SEL);
-            options.canvasBox = $wrapper.find(CANVASBOX_SEL);
-            options.imageBox = $wrapper.find(IMAGEBOX_SEL);
-            options.cropBox = $wrapper.find(CROPBOX_SEL);
-            options.image = new Image();
-        },
+                options.container = $wrapper.find(CONTAINER_SEL);
+                options.canvasBox = $wrapper.find(CANVASBOX_SEL);
+                options.imageBox = $wrapper.find(IMAGEBOX_SEL);
+                options.cropBox = $wrapper.find(CROPBOX_SEL);
+                options.image = new Image();
+
+                containerWidth = options.domStyle.containerWidth;
+                containerHeight = isNumber(options.aspectRatio) ? containerWidth / options.aspectRatio : options.domStyle.containerHeight;
+
+                options.container.css({
+                    width: containerWidth,
+                    height: containerHeight
+                });
+            },
             _oFunctions = {
                 getCropboxedCanvas: function () {
 
@@ -280,10 +311,7 @@
                     options.data.ratio *= 0.9;
                     setCanvasBoxPosition();
                 },
-                /**
-                 * type: float
-                 * ratio: 取值 minRatio ~ maxRatio
-                 ***/
+                // ratio: 取值 minRatio ~ maxRatio
                 zoom: function (ratio) {
                     if (options.sourceImageData.SliderZoomFirstLoad) {
 
@@ -302,9 +330,7 @@
                         setCanvasBoxPosition();
                     }
                 },
-                /**
-                 * 或者当前上传图片的最小 和 最大放大比率
-                 * **/
+                //  获取当前上传图片的最小 和 最大放大比率
                 getZoomData: function () {
 
                     var minRatio = options.sourceImageData.minRatio,
@@ -317,10 +343,7 @@
                         maxRatio: maxRatio
                     };
                 },
-                /***
-                 * 根据当前 imageBox的长宽 和 ratio 的值 计算出四个边界的值
-                 * return  Boundary -- { left: 0,....,bottom: 0 }
-                 **/
+                //  根据当前 imageBox的长宽 和 ratio 的值 计算出四个边界的值 -- Boundary -- { left: 0,....,bottom: 0 }
                 getBoundary: function () {
 
                     var Boundary = {
@@ -348,9 +371,7 @@
 
                     return Boundary;
                 },
-                /**
-                 *  angle : 0~360 / Number
-                 **/
+                // angle: (0 - 360) , type: number
                 rotate: function (angle) {
                     // deg
                     if (options.sourceImageData.SliderRotateFirstLoad) {
@@ -536,9 +557,12 @@
                     clientX = e.clientX;
                     clientY = e.clientY;
                 }
+
                 options.state.dragable = true;
                 options.state.mouseX = clientX;
                 options.state.mouseY = clientY;
+
+                options.cropstart && options.cropstart();
             },
             //  事件处理 - 鼠标按下 / 手指按下
             imgMove = function (e) {
@@ -580,7 +604,6 @@
                     options.sourceImageData.userScrollLeft += newOffsetLeft - offsetLeft;
                     options.sourceImageData.userScrollTop += newOffsetTop - offsetTop;
 
-
                     options.canvasBox.css({
                         "left": newOffsetLeft,
                         "top": newOffsetTop
@@ -594,12 +617,14 @@
 
                     options.state.mouseX = clientX;
                     options.state.mouseY = clientY;
+                    options.cropmove && options.cropmove();
                 }
             },
             imgMoveEnd = function (e) {
                 e.stopImmediatePropagation();
 
                 options.state.dragable = false;
+                options.cropend && options.cropend();
             },
             zoomImage = function (e) {
                 e.originalEvent.wheelDelta > 0 || e.originalEvent.detail < 0 ? options.data.ratio *= 1.1 : options.data.ratio *= 0.9;
@@ -788,6 +813,8 @@
                 $(window).on('mouseup', imgMoveEnd);
             }
 
+            // event ready
+            options.ready && options.ready();
         });
 
         if (isTouchDevice) {

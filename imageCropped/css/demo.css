@@ -15,13 +15,12 @@ img{
 .main_area{
 	max-width: 900px;
 	margin: 0 auto;
-	padding-bottom: 60px;
+	padding-bottom: 30px;
 }
 .edit_area{
 	position: relative;
 	width: 530px;
 	height: 530px;
-	background-color: rgb(250,250,250);
 	float: left;
 }
 .operating_area{

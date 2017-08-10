@@ -1,33 +1,28 @@
 .imageCropped-wrapper{
-	position: absolute;
-	top: 50%;
-	left: 50%;
-    box-sizing: border-box;
-    margin: 0 auto;
-    -moz-box-shadow: 0px 5px 5px rgba(0,0,0,0.1), /*底边阴影*/ 5px 0 5px rgba(0,0,0,0.1);
-    -webkit-box-shadow: 0px 5px 5px rgba(0,0,0,0.1), /*底边阴影*/ 5px 0 5px rgba(0,0,0,0.1);
-    box-shadow: 0px 5px 5px rgba(0,0,0,0.1), /*底边阴影*/ 5px 0 5px rgba(0,0,0,0.1);
-    background-color: #fff;
-}
-/* .imageCropped-wrapper.horizontal / .imageCropped-wrapper.vertical */
-.imageCropped-wrapper,
-.imageCropped-wrapper.postcard{
-	width: 444px;
-	height: 315px;
-	margin-left: -222px;
-	margin-top: -157.5px;
-	padding: 12px;
-}
-.imageCropped-container{
     position: relative;
     width: 100%;
     height: 100%;
-   /*  box-shadow: 0 0 0 10px rgb(255,255,255); */
+    box-sizing: border-box;
+    background-color: rgb(250,250,250);
+}
+.imageCropped-container{
+
+    position: absolute;
+    top:0;
+    left:0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+
     overflow: hidden;
     background-size: 50px 50px;
     background-position: 50% 50%;
     background-repeat: no-repeat;
     background-image: url(images/loading.gif);
+
+    -moz-box-shadow: 0 0 0 10px rgba(255,255,255,1),0px 15px 15px rgba(0,0,0,0.1), /*底边阴影*/ 15px 0 15px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 0 0 0 10px rgba(255,255,255,1),0px 15px 15px rgba(0,0,0,0.1), /*底边阴影*/ 15px 0 15px rgba(0,0,0,0.1);
+    box-shadow: 0 0 0 10px rgba(255,255,255,1),0px 15px 15px rgba(0,0,0,0.1), /*底边阴影*/ 15px 0 15px rgba(0,0,0,0.1);
 }
 .imageCropped-container .imageCropped-canvasBox,
 .imageCropped-container .imageCropped-imageBox{
@@ -92,12 +87,4 @@
 /* 超小屏幕（手机，小于 768px） */
 @media (max-width: 767px){
 
-	.imageCropped-wrapper.postcard{
-	    width: 300px;
-		height: 214px;
-		margin-left: -150px;
-		margin-top: -107px;
-		
-		padding: 10px;
-	}
 }
