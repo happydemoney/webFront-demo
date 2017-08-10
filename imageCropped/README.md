@@ -22,11 +22,11 @@ image cropped is a plugins for image cropped base on Jquery.
 
 ## code
 HTML:
-```
+```HTML
 <img id="cropImage" src="images/test-large.jpg" alt="cropImage" />
 ```
 JAVASCRIPT:
-```
+```javascript
 var options = {
     data: {
         ratio: 1.1,
@@ -48,6 +48,5 @@ var options = {
         console.log('cropend');
     }
 };
-
 configure.editCropper = $('#cropImage').imageCropped(options);
 ```
