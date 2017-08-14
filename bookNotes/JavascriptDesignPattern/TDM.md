@@ -1,0 +1,1 @@
+#   技巧型设计模式（Technical Design Model）

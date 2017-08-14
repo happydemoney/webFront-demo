@@ -1,11 +1,11 @@
 #   Javascript 设计模式
 
-##  一、面向对象编程
+##  一、面向对象编程([OOP.md](https://github.com/happydemoney/webFront-demo/blob/master/bookNotes/JavascriptDesignPattern/OOP.md))
 
 * 灵活的语言 —— Javascript
 * 写的都是看到的 —— 面向对象编程
 
-##  二、创建型设计模式
+##  二、创建型设计模式([CDM.md](https://github.com/happydemoney/webFront-demo/blob/master/bookNotes/JavascriptDesignPattern/CDM.md))
 
 * 神奇的魔术师 —— 简单工厂模式
 * 给我一张名片 —— 共工厂方法模式
@@ -14,7 +14,7 @@
 * 语言之魂 —— 原型模式
 * 一个人的寂寞 —— 单例模式
 
-##  三、结构型设计模式
+##  三、结构型设计模式([SDM.md](https://github.com/happydemoney/webFront-demo/blob/master/bookNotes/JavascriptDesignPattern/SDM.md))
 
 * 套餐模式 —— 外观模式
 * 水管弯弯 —— 适配器模式
@@ -24,7 +24,7 @@
 * 超值午餐 —— 组合模式
 * 城市公交车 —— 享元模式
 
-##  四、行为型设计模式
+##  四、行为型设计模式([BDM.md](https://github.com/happydemoney/webFront-demo/blob/master/bookNotes/JavascriptDesignPattern/BDM.md))
 
 * 照猫画虎 —— 模板方法模式
 * 通信卫星 —— 观察者模式
@@ -38,7 +38,7 @@
 * 点钞机 —— 迭代器模式
 * 语言翻译 —— 解释器模式
 
-##  五、技巧性设计模式
+##  五、技巧性设计模式([TDM.md](https://github.com/happydemoney/webFront-demo/blob/master/bookNotes/JavascriptDesignPattern/TDM.md))
 
 * 永无尽头 —— 链模式
 * 未来预言家 —— 委托模式
@@ -49,7 +49,7 @@
 * 异国战场 —— 参与者模式
 * 入场仪式 —— 等待者模式
 
-##  六、架构性设计模式
+##  六、架构性设计模式([ADM.md](https://github.com/happydemoney/webFront-demo/blob/master/bookNotes/JavascriptDesignPattern/ADM.md))
 
 * 死心眼 —— 同步模块模式
 * 大心脏 —— 异步模块模式

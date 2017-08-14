@@ -1,0 +1,1 @@
+#   结构性设计模式（Structural Design Model）
