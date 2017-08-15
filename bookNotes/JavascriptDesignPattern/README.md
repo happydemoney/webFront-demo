@@ -1,4 +1,4 @@
-#   Javascript 设计模式
+#   Javascript 设计模式[书籍链接](http://pan.baidu.com/s/1o7953dC) - ghyy
 
 ##  一、面向对象编程([OOP.md](https://github.com/happydemoney/webFront-demo/blob/master/bookNotes/JavascriptDesignPattern/OOP.md))
 
