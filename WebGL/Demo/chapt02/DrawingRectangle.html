@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Drawing Rectangle</title>
+</head>
+
+<body onload="main()">
+
+    <canvas id="example" width="400" height="400">
+        Please use a browser that supports 'canvas'
+    </canvas>
+
+    <script>
+        function main() {
+            var canvas = document.getElementById('example');
+
+            if (!canvas) {
+                console.log('Failed to retrieve the <canvas> element');
+                return false;
+            }
+
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'rgba(0,0,255,1.0)';
+            ctx.fillRect(0, 0, 300, 300);
+        }
+    </script>
+</body>
+
+</html>
