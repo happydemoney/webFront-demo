@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ortho view</title>
+</head>
+
+<body onload="main()">
+
+    <canvas id="webGl" width="400" height="400">
+        Please use a browser that supports 'canvas'
+    </canvas>
+
+    <p id="nearFar">The near and far values are displayed here.</p>
+
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="../lib/cuon-matrix.js"></script>
+
+    <script>
+        // 顶点着色器程序
+        var VSHADER_SOURCE =
+            'attribute vec4 a_Position;\n' +
+            'attribute vec4 a_Color;\n' +
+            'uniform mat4 u_ProjMatrix;\n' +
+            'varying vec4 v_Color;\n' +
+            'void main() {\n' +
+            ' gl_Position = u_ProjMatrix * a_Position;\n' + // 设置坐标
+            ' v_Color = a_Color;\n' +
+            '}\n';
+        // 片元着色器程序
+        var FSHADER_SOURCE =
+            '#ifdef GL_ES\n' +
+            'precision mediump float;\n' +  // 精度声明
+            '#endif\n' +
+            'varying vec4 v_Color;\n' +
+            'void main() {\n' +
+            ' gl_FragColor = v_Color;\n' + // 设置颜色
+            '}\n';
+
+        function main() {
+
+            var canvas = document.getElementById('webGl'),
+                nearFar = document.getElementById('nearFar'),
+                gl = getWebGLContext(canvas);
+
+            if (!gl) {
+                console.log('Failed to get the rending context for WebGL!');
+                return;
+            }
+
+            // 初始化着色器
+            if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
+                console.log('Failed to initialize shaders.');
+                return;
+            }
+
+            // 设置顶点位置与纹理坐标
+            var n = initVertexBuffers(gl);
+            if (n < 0) {
+                console.log('Failed to set the positions of the vertices');
+                return;
+            }
+
+            // 获取u_ViewMatrix变量的存储地址
+            var u_ProjMatrix = gl.getUniformLocation(gl.program, 'u_ProjMatrix');
+
+            // 设置视点、视线和上方向
+            var projMatrix = new Matrix4();
+
+            document.onkeydown = function (event) { keydown(event, gl, n, u_ProjMatrix, projMatrix); };
+
+            // 设置<canvas>的背景色
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+
+            draw(gl, n, u_ProjMatrix, projMatrix);
+        }
+
+        function initVertexBuffers(gl) {
+            var verticesColors = new Float32Array([
+                // 顶点坐标和颜色
+                0.0, 0.6, -0.4, 0.4, 1.0, 0.4, // 绿色三角形在最后面
+                -0.5, -0.4, -0.4, 1.0, 0.4, 0.4,
+                0.5, -0.4, -0.4, 1.0, 0.4, 0.4,
+
+                0.5, 0.4, -0.2, 0.4, 0.4, 0.4, // 黄色三角形在中间
+                -0.5, 0.4, -0.2, 1.0, 1.0, 0.4,
+                0.0, -0.6, -0.2, 1.0, 1.0, 0.4,
+
+                0.0, 0.5, 0.0, 0.4, 0.4, 1.0, // 蓝色三角形在最前面
+                -0.5, -0.5, 0.0, 0.4, 0.4, 1.0,
+                0.5, -0.5, 0.0, 1.0, 0.4, 0.4
+            ]);
+
+            var n = 9;//点的个数
+
+            var FSIZE = verticesColors.BYTES_PER_ELEMENT;
+
+            // 创建缓冲区对象
+            var vertexColorBuffer = gl.createBuffer();
+
+            if (!vertexColorBuffer) {
+                console.log('Failed to create the buffer object');
+                return -1;
+            }
+
+            // 将缓冲区对象绑定到目标
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexColorBuffer);
+
+            // 向缓冲区对象写入数据
+            gl.bufferData(gl.ARRAY_BUFFER, verticesColors, gl.STATIC_DRAW);
+
+            var a_Position = gl.getAttribLocation(gl.program, 'a_Position'),
+                a_Color = gl.getAttribLocation(gl.program, 'a_Color');
+
+            if (a_Position < 0 || a_Color < 0) {
+                console.log('Failed to get the storage location of a_Position/a_Color');
+                return -1;
+            }
+
+            // 将缓冲区对象分配给a_Position变量
+            gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, FSIZE * 6, 0);
+            // 连接a_Position变量与分配给它的缓冲区对象
+            gl.enableVertexAttribArray(a_Position);
+
+            // 将缓冲区对象分配给a_TexCoord变量
+            gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, FSIZE * 6, FSIZE * 3);
+            // 连接a_TexCoord变量与分配给它的缓冲区对象
+            gl.enableVertexAttribArray(a_Color);
+
+            return n;
+        }
+
+        // 视点与近、远裁剪面的举例
+        var g_near = 0.0, g_far = 0.5;
+        function keydown(event, gl, n, u_ProjMatrix, projMatrix) {
+
+            switch (event.keyCode) {
+                case 37: g_near -= 0.01; break;    // 左
+                case 38: g_far += 0.01; break;   // 上
+                case 39: g_near += 0.01; break;   // 右
+                case 40: g_far -= 0.01; break;   // 下
+                default: break;
+            }
+
+            draw(gl, n, u_ProjMatrix, projMatrix);
+        }
+
+        function draw(gl, n, u_ProjMatrix, projMatrix) {
+
+            // 设置视点和视线
+            // projMatrix.setLookAt(g_eveX, g_eveY, g_eyeZ, 0, 0, 0, 0, 1, 0);
+            projMatrix.setOrtho(-1, 1, -1, 1, g_near, g_far);
+
+            // 将视图矩阵给u_ViewMatrix变量
+            gl.uniformMatrix4fv(u_ProjMatrix, false, projMatrix.elements);
+
+            gl.clear(gl.COLOR_BUFFER_BIT);   // Clear <canvas>
+
+            // 显示当前的near和far值
+            nearFar.innerHTML = 'near: ' + Math.round(g_near * 100) / 100 + ', far: ' + Math.round(g_far * 100) / 100;
+
+            // 绘制三角形
+            gl.drawArrays(gl.TRIANGLES, 0, n);
+        }
+    </script>
+</body>
+
+</html>
