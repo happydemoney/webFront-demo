@@ -151,41 +151,120 @@ Observer.fire('test',{msg: '传递参数'});
 
 ##  超级玛丽 —— 状态模式
 
-    状态模式(state)：当一个对象的内部状态发生改变时，会导致其行为的改变，这看起来
-    像是改变了对象。
+    状态模式(state)：当一个对象的内部状态发生改变时，会导致其行为的改变，这看起来像是改变了对象。
+    状态模式既是解决程序中臃肿的分支判断语句问题，将每个分支转化为一种状态独立出来，方便每种状态的管理又不至于每次执行时遍历所有分支。
+
+    主要目的：将条件判断的不同结果转化为状态对象的内部状态，既然是状态对象的内部状态，所以作为状态对象内部的私有变量，然后提供一个能够调用状态对象内部状态的接口方法对象。
+    最终目的：简化分支判断流程
+
+    当有许多判断时，如果用if或者switch条件判断语句来写，是很难维护的，因为增加或删除一个条件需要改动的地方太多了。
+    其次组合条件用if或switch分支判断实现，无形中增加的成本是无法想象的。
 
 ```javascript
-// 投票结果状态对象
-var ResultState = function(){
-    // 判断结果保存在内部状态中
-    var States = {
-        state0: function(){
-            // 处理结果 0 
-            console.log('这是第一种情况');
-        },
-        // ...
-        stateN: function(){
-            // 处理结果 N
-            console.log('这是第N种情况');
+    //状态类
+    var State = function(){
+        var _currentState = {},
+        states = {
+            one : function(){
+                console.log("状态one");
+            },
+            two : function(){
+                console.log("状态two");
+            },
+            three : function(){
+                console.log("状态three");
+            },
+            four : function(){
+                console.log("状态four");
+            },
+            five : function(){
+                console.log("状态five");
+            }
+        };
+        //控制类
+        var Action = {
+            changeState : function(){
+                //组合动作由多个参数实现
+                var arg = arguments;
+                //重置内部状态
+                _currentState = {};
+                if(arg.length){
+                    for(var i=0, len = arg.length; i < len; i++){
+                        //从内部状态添加动作
+                        _currentState[arg[i]] = true;
+                    }
+                }
+                return this;
+            },
+            goes : function(){
+                //遍历内部状态保存的动作
+                for(var i in _currentState){
+                    //如果该动作就执行
+                    states[i] && states[i]();
+                }
+                return this;
+            }
         }
-    };
-    // 获取某一种状态并执行其对应的方法
-    function show(result){
-        States['state' + result] && States['state'+ result]();
+        return {
+            change : Action.changeState,
+            goes : Action.goes
+        }
     }
-    return {
-        // 返回调用状态方法接口
-        show : show
-    }
-}();
+//两种方式执行这个状态类
+//1. 函数方式
+State().change('one','three').goes().goes().change('two').goes();
+//2. 实例化类
+var state = new State();
+state.change('one','three').goes().goes().change('two').goes();
 ```    
         状态模式即是解决程序中臃肿的分支判断语句问题，将每个分支转化为一种状态独立出来，
     方便每种状态的管理又不至于每次执行时遍历所有分支。在程序中到底产出哪种行为结果，决定
     于选择哪种状态，而选择何种状态又是在程序运行时决定的。当然状态模式最终的目的即是简化
     分支判断流程。
 
-
 ##  活诸葛 —— 策略模式
+
+    策略模式（Strategry）:将定义的一组方法封装起来，使其相互之间可以替换。封装的算法具有一定独立性，不会随客户端变化而变化 
+    
+```javascript
+// 表单正则验证策略对象
+var InputStrategy = function (){
+    var strategy = {
+        // 是否为空
+        notNull : function(value){
+            return /\s+/.test(value) ?　'请输入内容' : '';
+        },
+        // 是否是一个纯数字
+        number : function(value){
+            return /^[0-9]+(\.[0-9]+)?$/.test(value) ? '' : '请输入数字';
+        },
+        // 是否是本地电话
+        phone : function(value){
+            return /^\d{3}\-\d{8}$|^\d{4}\-\d{7}$/.test(value) ? '' : '请输入正确的电话号码格式，如：010-12345678 或 0418-1234567';
+        }
+    }
+    return{
+        // 验证接口type算法value表单值
+        check : function(type,value){
+            // 去除首尾空白符
+            value = value.replace(/^\s+|\s+$/g,'');
+            return strategy[type] ?　strategy[type](value) : '没有该类型的检测方法';
+        },
+        // 添加策略
+        addStrategy : function(type,fn){
+            strategy[type] = fn;
+        }
+    }
+}();
+
+// 拓展 可以延伸算法
+InputStrategy.addStrategy('email',function(value){
+    return /^[a-zA-Z0-9]+([._\\-]*[a-zA-Z0-9])*@([a-z0-9]+[-a-zA-Z0-9]*[a-zA-Z0-9]+.){1,63}[a-zA-Z0-9]+$/i.test(value)? '' : '请输入正确的邮箱格式';
+});
+
+InputStrategy('number','123'); // ''
+
+```
 
 
 ##  有序车站 —— 职责链模式
