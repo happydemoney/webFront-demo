@@ -266,24 +266,327 @@ InputStrategy('number','123'); // ''
 
 ```
 
-
 ##  有序车站 —— 职责链模式
 
+        职责连模式(Chain of Responsibility):解决请求的发送者与请求的接受者之间的耦合，通过职责链上的多个对象对分解其你去流程，
+    实现多个对象之间的传递，知道最够一个对象完成请求的处理。
+
+```javascript
+//  1. 请求模块
+/**
+ *  异步请求对象（简化版）
+ *  参数  data         请求数据
+ *  参数  dealType     响应数据处理对象
+ *  参数  dom          事件源
+ */
+var sendData = function(data , dealType , dom){
+    //  XHR对象 简化 - IE另外处理
+    var xhr = new XMLHttpRequest(),
+        url = ''; // 请求路径
+    xhr.onload = function(event){
+        // 请求成功
+        if((xhr.status >= 200 && xhr.status < 300>) || xhr.status === 304){
+            dealType(xhr.responseText, dealType, dom);
+        }else{
+            // 请求失败
+        }
+    };
+    // 拼接字符串
+    for(var i in data){
+        url += '&' + i + '=' + data[i];
+    }
+    // 发送异步请求
+    xhr.open('get',url,true);
+    xhr.send(null);
+};
+//  2. 响应数据适配模块
+/**
+ *  处理响应数据
+ *  参数  data         响应数据
+ *  参数  dealType     响应数据处理对象
+ *  参数  dom          事件源
+ */
+var dealData = function(data , dealType , dom){
+    // 对象toString方法简化引用
+    var dataType = Object.prototype.toString.call(data);
+    // 判断相应数据处理对象
+    switch(dealType){
+        // 输入框提示功能
+        case 'sug':
+            // 如果数据为数组
+            if(dataType === "[object Array]"){
+                // 创建提示框组件
+                return createSug(data,dom);
+            }
+            // 将响应的对象数据转化为数组
+            else if(dataType === "[object Object]"){
+                var newData = [];
+                for(var i in data){
+                    newData.push(data[i]);
+                }
+                // 创建提示框组件
+                return createSug(newData,dom);
+            }
+            // 将响应的其他数据转化为数组
+            return createSug([data],dom);
+            break;
+        case 'validate':
+            // 创建校验组件
+            createValidateResult(data,dom);
+            break;    
+        default: break;    
+    }
+};
+//  3. 创建组件模块
+/**
+ *  创建提示框组件
+ *  参数  data         响应适配数据
+ *  参数  dom          事件源
+ */
+var createSug = function(data,dom){
+    var i = 0,
+        len = data.length,
+        html = '';
+    // 拼接每一句提示语
+    for(; i < len ; i ++){
+        html += '<li>' + data[i] + '</li>';
+    }    
+    // 显示提示框
+    dom.parentNode.getElementsByTagName('ul')[0].innerHtml = html;
+};
+ /**
+ *  创建校验组件
+ *  参数  data         响应适配数据
+ *  参数  dom          事件源
+ */
+ var createValidateResult(data,dom){
+     // 显示校验结果
+     dom.parentNode.getElementsByTagName('span')[0].onnerHTML = data;
+ };
+```
 
 ##  命令模式
 
+    命令模式(Command):将请求与实现解耦并封装成独立对象，从而使不同的请求对客户端的实现参数化。
+
+```javascript
+// canvas常用方法封装
+var CanvasCommand = (function(){
+    // 获取canvas
+    var canvas = document.getElementById('canvas'),
+        // canvas元素的上下文引用对象缓存在命令对象的内部
+        ctx = canvas.getContext('2d');
+    // 内部方法对象
+    var Action = {
+        // 填充色彩
+        fillStyle : function(c){
+            ctx.fillStyle = c;
+        },
+        // 填充矩形
+        fillRect : function (x,y,width,height){
+            ctx.fillRect(x,y,width,height);
+        },
+        // 描边色彩
+        strokeStyle : function(c){
+            ctx.strokeStyle = c;
+        },
+        // 描边矩形
+        strokeRect : function(x,y,width,height){
+            ctx.strokeRect(x,y,width,height);
+        },
+        // 填充字体
+        fillText : function(text,x,y){
+            ctx.fillText(text,x,y);
+        },
+        // 开启路径
+        beginPath : function(){
+            ctx.beginPath();
+        },
+        // 移动画笔触点
+        moveTo : function(x,y){
+            ctx.moveTo(x,y);
+        },
+        // 画笔连线
+        lineTo : function(x,y){
+            ctx.lineTo(x,y);
+        },
+        // 绘制弧线
+        arc : function (x,y,r,begin,end,dir){
+            ctx.arc(x,y,r,begin,end,dir);
+        },
+        // 填充
+        fill : function(){
+            ctx.fill();
+        },
+        // 描边
+        stroke : function(){
+            ctx.stroke();
+        }
+    };
+    return {
+        // 命令接口
+        excute : function(msg){
+            // 如果没有指令返回
+            if(!msg)
+                return;
+            // 如果命令是一个数组
+            if(msg.length){
+                // 遍历执行多个命令
+                for(var i = 0,len = msg.length; i < len; i++){
+                    excute(msg[i]);
+                }
+            }
+            // 执行一个命令
+            else{
+                // 如果msg.param不是一个数组，将其转化为数组,apply第二个参数要求格式
+                msg.param = Object.prototype.toString.call(msg.param) === "[object Array]" ? msg.param : [msg.param];
+                // Action 内部调用的方法可能引用this,为保证作用于中this指向正确，故传入Action
+                Action[msg.command].apply(Action,msg.param);
+            }    
+        }
+    };
+})();
+
+// 设置填充色彩为红色，并绘制一个矩形
+CanvasCommand.excute([
+    {command:'fillStyle',param:'red'},
+    {command:'fillRect',param:[20,20,100,100]}
+]);
+```
 
 ##  驻华大使 —— 访问者模式
 
+    访问者模式(Visitor):针对对象结构中的元素，定义在不改变该对象的前提下访问结构中元素的新方法。
+
+```javascript
+// 对象访问器
+var Visitor = (function(){
+    return  {
+        // 截取方法
+        splice : function(){
+            // splice方法参数，从原参数的第二个参数开始算起
+            var args = Array.prototype.splice.call(arguments,1);
+            // 对第一个参数对象执行splice方法
+            return Array.prototype.splice.apply(arguments[0],args);
+        },
+        // 添加数据方法
+        push : function(){
+            // 强化类数组数据，使他拥有length属性
+            var len = arguments[0].length || 0;
+            // 添加的数据从原参数的第二个参数算起
+            var args = this.splice(arguments,1);
+            // 校正length属性
+            arguments[0].length = len + arguments.length - 1;
+            // 对第一个参数对象执行push方法
+            return Array.prototype.push.apply(arguments[0],args);
+        },
+        // 弹出最后一次添加的元素
+        pop : function(){
+            // 对第一个参数对象执行pop方法
+            return Array.prototype.pop.apply(arguments[0]);
+        }
+    };
+})();
+
+var a = new Object();
+console.log(a.length); // undefined
+
+Visitor.push(a,1,2,3,4);
+console.log(a.length); // 4
+
+Visitor.push(a,4,5,6);
+console.log(a); // {0:1,...,6:6,length:7}
+
+Visitor.pop(a);
+console.log(a); // {0:1,...,5:6,length:6}
+
+Visitor.splice(a,2);
+console.log(a); // {0:1,1:2,length:2}
+```
+        访问者模式解决数据与数据的操作方法之间的耦合，将数据的操作方法独立于数据，使其
+    可以自由化演变。因此访问者更适合于那些数据稳定，但是数据的操作方法易变的环境下。因
+    此当操作环境改变时，可以自由修改操作方法以适应操作环境，而不用修改原数据，实现操作
+    方法的拓展。同时对于同一个数据，它可以被多个访问对象所访问，这极大增加了操作数据的
+    灵活性。
 
 ##  媒婆 —— 中介者模式
 
+        中介者模式(Mediator)：通过中介者对象封装一系列对象之间的交互模式，使对象之间不再相互引用，
+    降低他们之间的耦合。有时中介者对象也可以改变对象之间的交互。
+
+```javascript
+// 中介者对象
+var Mediator = function(){
+    // 消息对象
+    var _msg = {};
+    return {
+        /**
+         *  订阅消息方法
+         *  参数 type     消息名称
+         *  参数 action   消息回调函数
+         **/
+        register : function(type , action){
+            // 如果该消息存在
+            if(_msg[type]){
+                // 存入回调函数
+                _msg[type].push(action);
+            }else{
+                // tan90 则建立该消息函数
+                _msg[type] = [];
+                // 存入新消息回调函数
+                _msg[type].push(action);
+            }
+        },
+        /***
+         *  发布消息方法 
+         *  参数 type 消息名称
+         **/
+        send : function(type){
+            // 如果该消息已经被订阅
+            if(_msg[type]){
+                // 遍历已存储的消息回调函数
+                for(var i = 0,len = _msg[type].length; i < len;i ++){
+                    // 执行该回调函数
+                    _msg[type][i] && _msg[type][i]();
+                }
+            }
+        } 
+    };
+}();
+// unit test
+Mediator.register('demo',function(){
+    console.log('first');
+});
+Mediator.register('demo',function(){
+    console.log('second');
+});
+// 发布消息
+Mediator.send('demo');
+```
+
+    Q: 通过中介者模式来实现点击键盘方向控制页面中盒子的移动
 
 ##  做好笔录 —— 备忘录模式
 
+        备忘录模式（Memento）：在不破坏对象的封装性的前提下，在对象之外捕获并保存该对象内部的状态
+    以便日后对象使用或者对象回复到以前的某个状态。
+
+```javascript
+// 缓存ajax数据
+```    
+    备忘录模式最主要的任务是对现有的数据或状态做缓存，为将来某个时刻使用或回复做准备。
 
 ##  点钞机 —— 迭代器模式
 
+    迭代器模式（Iterator）：在不暴露对象内部结构的同时，可以顺序地访问聚合对象内部的元素。
+
+```javascript
+```
 
 ##  语言翻译 —— 解释器模式
 
+    解释器模式(Interpreter):对于一种语言，给出其文法表现形式并定义一种解释器，通过使用这种解释器来
+    解释语句中定义的句子。
+
+```javascript
+```
