@@ -49,19 +49,26 @@ F.define = function(str, fn){
 
 ##  大心脏 —— 异步模块模式
 
-
+    AMD(Asynchronous Module Definition): 请求发出后，继续其他业务逻辑，直到模块加载完成执行后续的逻辑，实现模块开发中对模块加载完成后的引用。
 
 ##  分而治之 —— Widget 模式
+
+    Widget：Widget模式是指借用Web widget思想将页面分解成部件，针对部件开发，最终组合成完整的页面。
 
 
 
 ##  三人行 —— MVC 模式
 
+    MVC即模型（modle） - 视图（view） - 控制器（controller）：用一种将业务逻辑、数据、视图分离的方式组织架构代码。
 
+*   M 数据 - 页面初始化获取的同步数据以及交互时通过AJAX获取的异步数据等
+*   V 视图 - 创建视图
+*   C 交互 - 各种页面交互与页面特效
 
 ##  三军统帅 —— MVP 模式
 
-
+    MVP即模型（model） - 视图（view） - 管理器（presenter）：View层不直接引用Model层内的数据，而是通过presenter层实现对Model层内的数据访问。
+    即所有层次的交互都发生在Presenter层中。
 
 ##  视图的逆袭 —— MVVM 模式
 
