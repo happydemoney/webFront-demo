@@ -94,28 +94,65 @@ set | 函数用来保存一个值
 
 ##  注释
 
-*   
-*   
-*   
-*   
+>   单行注释
+    
+    以两个下划线开始，以行尾结束
+
+>   多行注释
+
+    以/*开始，以*/结尾。
+
+>   使用注释
+
+    原则：在需要让代码变得更清晰时添加注释。
+
+1.  难于理解的代码
+
+2.  可能被误认为错误的代码
+
+3.  浏览器特性hack
+
+>   文档注释
+
+    /** @method @param @return **/
 
 ##  语句和表达式
 
-*   
-*   
-*   
-*   
-*   
-*   
+>
+>
+>
+>
+>
+>
 
 ##  变量、函数和运算符
 
-*   
-*   
-*   
-*   
-*   
+>
+>
+>
+>
+>
+>
 
 #   第二部分  编程实践
 
 #   第三部分  自动化
+
+```javascript
+function factorial(value){
+    if(value == 1){
+        return 1;
+    }
+
+    return value * factorial(value - 1);
+}
+var num = 0;
+for(var i = 1; i < 21; i ++){
+    num += factorial(i);
+}
+
+// 零全局变量
+(function(win){
+    console.log(win);
+}(window));
+```

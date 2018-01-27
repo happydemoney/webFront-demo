@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<title>H5-VR播放</title>
+	<meta name="description" content="点播|直播,VR,万视无忧" />
+	<meta name="keywords" content="点播|直播,VR,万视无忧" />
+	<meta name="apple-touch-fullscreen" content="yes">
+	<meta name="full-screen" content="yes" />
+	<meta name="x5-fullscreen" content="true" />
+
+	<link rel="stylesheet" type="text/css" href="css/index.css" />
+
+	<script src="js/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/md5.js" type="text/javascript"></script>
+
+	<script type="text/javascript">
+		var playCount = 0; //观看人数
+		var videoVRType = 0;
+		var url = ''; //播放地址
+		var playId = '';//播放ID
+		var playType = '';//播放类型
+		var fse = '';//鉴权参数
+		var getUrl = window.location.search;
+		var params = getUrl.substr(1).split("&");
+		var liveType = '';//0 普通 
+		for (var i = 0; i < params.length; i++) {
+			var paramName = params[i].split("=")[0];
+			var paramVal = params[i].split("=")[1];
+			if ('playType' == paramName) {
+				playType = paramVal;
+			} else if ('userVideoID' == paramName) {
+				playId = paramVal;
+			} else if ('time' == paramName || 'expired' == paramName || 'secret' == paramName) {
+				fse += ((('' == fse) ? '' : '&') + params[i]);
+			} else if ('liveType' == paramName) {
+				liveType = paramVal;
+			}
+		}
+		if ('uLive' != playType && '' != fse) {
+			fse += "&vid=" + playId;//点播鉴权需参数vid
+		}
+		console.log('playId=' + playId + ';playType=' + playType);
+		console.log('鉴权参数' + fse);
+		$.ajax({
+			type: "POST",
+			url: "flashplayerAction!flashParamJson.action" + getUrl,
+			data: "",
+			dataType: 'json',
+			cache: false,
+			contentType: false,
+			processData: false,
+			async: false, //请求同步
+			success: function (json) {
+				playCount = json[0].playCount;
+				videoVRType = json[0].videoVRType;
+				$("title").html(json[0].title); //更改页标签title属性
+				if ('uLive' == playType) { //直播
+					var f = json[0].f;
+					url = f.substring(f.indexOf("/live/"), f.lastIndexOf("?")) + "/playlist.m3u8?liveID=" + playId;
+					/*url="http://play1.live.com"+url;*/
+				} else { //点播
+					$.ajax({
+						url: 'yzplayerAction!xmlMethod.action?str=' + playId + '_[$pat0]',
+						type: 'post',
+						dataType: 'XML',
+						async: false,
+						error: function () { },
+						success: function (xml) {
+							var m3u8Path = $("file", xml).text(); //m3u8地址
+							/*播放n档位首先参数firstRate，如无此参数则从所有档位参数a(多个|分割)中取最后档位**/
+							var trans = ''; //最终播放档位
+							var firstRate = $.trim(json[0].firstRate); //首选档位
+							if ('' != firstRate) {
+								trans = firstRate;
+							} else {
+								var a = $.trim(json[0].a); //所当档位
+								if ('' != a) trans = a.substr((a.indexOf("|") == -1) ? 0 : a.lastIndexOf("|") + 1);//取值最后档位
+							}
+							if ('' != trans) {
+								m3u8Path = m3u8Path.replace('[$pat0]', firstRate);
+								//m3u8文件生成规则
+								var mdMi = hex_md5("videoWsviewOut/" + m3u8Path.substring(m3u8Path.indexOf("/hls/") + 5, m3u8Path.lastIndexOf("/")));
+								url = m3u8Path.substring(m3u8Path.indexOf("/hls/"), m3u8Path.lastIndexOf("/")) + "/" + mdMi + ".m3u8";
+								/*url="http://113.105.151.228:1800"+url;*/
+							}
+						}
+					});
+				}
+				if ('' != fse) url += ((-1 == url.lastIndexOf("?")) ? '?' : '&') + fse;
+				// url='http://192.168.1.210:8010'+url;
+				// url= 'video/1.m3u8';
+				console.log('播放m3u8地址：' + url);
+				// url = "http://192.168.1.210:8010/live/26be6931c3/playlist.m3u8?liveID=100027749";
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) { }
+		});
+
+		var size = window.innerWidth > window.innerHeight ? window.innerHeight : window.innerWidth;
+		document.getElementsByTagName('html')[0].style.fontSize = size * 100 / 375 + 'px';
+
+		var status = 0;
+		//定时上报
+		function startReport(playId) {
+			var liveID = playId;
+			var recodeID = $("#recodeID").val();
+			$.ajax({
+				type: "POST",
+				url: "livePlayReport!reporttLivePlay.action",
+				data: { "liveID": liveID, "recodeID": recodeID },
+				dataType: 'json', //接受数据格式    
+				async: true,//同步方式   
+				success: function (json) {
+					var code = json.code;
+					$('#recodeID').val(json.recodeID);
+					$('#errorMes').text(json.mes);
+				},
+				error: function () {
+					status = 1;
+				},
+				complete: function () {
+					if (recodeID) {
+						//console.log("qqq"+recodeID);
+					} else {
+						//第一次上报
+						getOnlineCount(liveID);
+					}
+				}
+			});
+
+			if (0 == status) {
+				setTimeout('startReport(' + liveID + ')', 60000);
+			}
+		}
+		/** 获取实时在线人数*/
+		function getOnlineCount(liveID) {
+			$.ajax({
+				type: "POST",
+				url: "livePlayer!getOnlineCount.action?liveID=" + liveID,
+				data: "",
+				dataType: 'json',
+				cache: false,
+				contentType: false,
+				processData: false,
+				async: false, //请求同步
+				success: function (json) {
+					console.log("pc getOnline:" + json);
+					for (var i = 0; i < json.length; i++) {
+						$("#" + json[i].name).text(json[i].value);
+					}
+				}, complete: function () {
+					setTimeout('getOnlineCount(' + liveID + ')', 30000);
+				}
+			});
+		}
+
+	</script>
+
+	<script src="js/moblieFace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="https://cdn.bootcss.com/socket.io/1.4.5/socket.io.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/chat.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/view.js" type="text/javascript" charset="utf-8"></script>
+	<!-- build:jsLib -->
+	<script src="js/hls.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/three.js" type="text/javascript" charset="utf-8"></script>
+	<!-- endbuild -->
+	<script src="js/stats.min.js" type="text/javascript" charset="utf-8"></script>
+	<!-- build:jsBusiness -->
+	<script src="js/vr.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/app.js" type="text/javascript" charset="utf-8"></script>
+	<!-- endbuild -->
+</head>
+
+<body>
+	<input type="hidden" id="recodeID">
+	<div id="showInfo" style="position: absolute;width: 90%; height:50%; z-index: 10;color: red;overflow: auto;display:none;">显示信息:
+		<br>
+	</div>
+	<!--点击进入聊天-->
+	<div class="chatBtn"></div>
+	<!--观看人数-->
+	<div class="number" id="online">
+		<span id="onlineCount"></span>人
+		<i class="oline-em">|</i>累计播放
+		<span id="playCount"></span>次</div>
+
+	<!--播放器相关-->
+	<div class="videoTab">
+		<button class="btn-play player_play" id="btn-play"></button>
+		<span class="live-time" id="live-time">00:00:00</span>
+
+		<!--.player_big全屏图标，.player_small缩小图标-->
+		<!--<div class="fullscreen player_big" id="fullscreen"></div>-->
+
+		<div class="vrchange vrchange0" id="vrBtn">全景</div>
+
+		<!--.player_gyro未开启陀螺仪，.player_gyro_sel已开启陀螺仪(默认开启)-->
+		<div class="gyroscope player_gyro_sel" id="gyroscope">陀螺仪</div>
+
+		<!--.overthrow未翻转，.overthrow_sel已翻转-->
+		<div class="reversal overthrow" id="reversal">正视</div>
+	</div>
+
+	<div class="loading" id="loading"></div>
+	<!--视频加载前loading  -->
+	<div id="main" class="container"></div>
+	<div id="result" style="display:none;">
+		<!--测试-->
+	</div>
+
+</body>
+
+<script type="text/javascript">
+	/*以下为点播单独处理**/
+	if ('uLive' == playType) {
+		startReport(playId);
+	} else {
+		$("#online").hide();
+	}
+</script>
+
+</html>

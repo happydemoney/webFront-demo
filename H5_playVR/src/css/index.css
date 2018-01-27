@@ -1,0 +1,476 @@
+html {
+    -webkit-text-size-adjust: none;
+    -ms-text-size-adjust: none
+}
+body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,figure,menu,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,select,th,td {
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: rgba(0,0,0,0)
+}
+html,body{
+	width: 100%;
+    height: 100%;
+}
+ul,ol {
+    list-style: none
+}
+h1,h2,h3,h4,h5,h6 {
+    font-weight: normal;
+    font-size: 100%
+}
+button,input,select,textarea,input[type="text"],input[type="password"],input[type="search"],input[type="number"],input[type="tel"] {
+    font-family: inherit;
+    font-size: 100%;
+    border: none
+}
+button:focus,input:focus,select:focus,textarea:focus,input[type="text"]:focus,input[type="password"]:focus,input[type="search"]:focus,input[type="number"]:focus,input[type="tel"]:focus {
+    outline: none
+}
+button,html input[type="button"],input[type="reset"],input[type="submit"] {
+    -webkit-appearance: button
+}
+input,textarea {
+    -webkit-appearance: none
+}
+a{
+    text-decoration: none;
+}
+iframe{
+    display: block;
+}
+video{
+    display: block;
+    width:100%;
+    background: #000;
+}
+canvas{
+	vertical-align: bottom;
+}
+body{
+    font-family:"Microsoft YaHei", "YaHei", "微软雅黑", "Helvetic Neue",Helvetica,Arial,sans-serif;
+   	background-color: #000;
+    font-size: 0.12rem;
+}
+.wrap{
+	background-image: url(../images/di.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+}
+@media screen and (orientation: portrait) {
+	.wrap{background-size: contain;}
+} 
+@media screen and (orientation: landscape) {
+	.wrap{background-size: 100% 78%;}
+} 
+/*宣传*/
+.logo{
+	position: relative;
+	padding-top: 0.16rem;
+}
+.logo .logo1{
+	margin: 0 auto;
+	width: 1.5rem;
+	height: 0.28rem;
+	background: url(../images/logo.png) no-repeat;
+	background-size: contain;
+}
+.logo .logo2{
+	margin: 0 auto;
+	width: 2.35rem;
+	height: 1.65rem;
+	background: url(../images/biaoti.png) no-repeat;
+	background-size: contain;
+}
+.logo .liveTime{
+	position: absolute;
+	left: 51.2%;
+	bottom: 0.06rem;
+}
+.logo .liveTime>img{
+	display: block;
+	width: 1.605rem;
+}
+.show{
+	width:3.47rem ;
+	height: 1.94rem;
+	background: url(../images/iphone.png) no-repeat;
+	background-size: contain;
+	margin: 0 auto;
+}
+.show .showGif{
+	display: block;
+	width: 2.83rem;
+	height: 1.45rem;
+	padding-top: 0.12rem;
+	margin-left: 0.32rem;	
+}
+.show .showGif img{
+	width: 100%;
+}
+.toLive{
+	width: 1.355rem;
+	height: 0.45rem;
+	line-height: 0.45rem;
+	text-align: center;
+	font-size: 0.16rem;
+	margin:0.24rem auto 0.52rem;
+	color: #FFF;
+	background-color: #c12adc;
+}
+.toLive a{
+	color: #FFF;
+}
+.vr_ins{
+	line-height: 0.18rem;
+	padding: 0 0.2rem 0.32rem;
+	color: #fcb44d;
+}
+.vr_ins h2{
+	font-size: 0.13rem;
+ 	text-align: center;
+ 	margin-bottom: 0.07rem;
+ 	position: relative;
+ }
+.vr_ins h2:before,.vr_ins h2:after {
+    content: '';                 
+    position: absolute;         
+    top: 50%;
+    background: #fcb44d;   
+    /*width: 1.12rem;*/
+    width: 30%;
+    height: 1px;
+}
+.vr_ins h2:before{
+    left: 0;  
+}
+.vr_ins h2:after {
+    right: 0;
+}
+.vr_ins h2 i{
+	font-style: normal;
+	padding:0 0.12rem;	
+}
+.vr_ins p{
+	padding-left: 0.05rem;
+    position: relative;
+}
+.vr_ins p i{
+	position: absolute;
+    top: 0;
+    left: 0;
+    font-style: normal;
+}
+/*直播界面*/
+/*切换至宣传页面*/
+.backHome{
+	position: absolute;
+	z-index: 0;
+	bottom: 0.65rem;
+	right: 0.14rem;
+	width: 0.45rem;
+	height: 0.45rem;
+	background: url(../images/cx_icon.png) no-repeat;
+	background-size: 100%;
+}
+/*观看人数*/
+.number{
+	height: 0.21rem;
+	line-height: 0.21rem;
+	position: absolute;
+	right: 0.15rem;
+	top: 0.17rem;
+	padding-left: 0.25rem;
+	color: #FFF;
+	font-family: PingFang-Sc-Regular;
+	background: url(../images/icon_man.png) no-repeat;
+	background-size: 0.20rem 0.21rem;
+	background-position:left center;
+}
+/*聊天*/
+.chatBtn{
+	position: absolute;
+	z-index: 0;
+	bottom: 0.65rem;
+	left: 0.14rem;
+	width: 0.45rem;
+	height: 0.45rem;
+	background: url(../images/lt_icon.png) no-repeat;
+	background-size: 100%;
+}
+
+.chatTab{
+	display: none;
+	position: absolute;
+	z-index: 10;
+	left: 0.14rem;
+	bottom: 0.64rem;
+	padding: 0.1rem;
+    font-size: 0.15rem;
+	background: rgba(0,0,0,0.19);	
+}
+.chatTab .chatList{
+	width: 2.5rem;
+	height: 1.85rem;
+	overflow-y: auto;
+}
+.chatTab ul li{
+	font-family: PingFang-Sc-Regular;
+	line-height: 0.22rem;
+	color: #ff7815;
+}
+
+/*city0其他网友，city1自己发*/
+.chatTab ul li .city0{
+	color: #e49bff;
+}
+.chatTab ul li .city1{
+	color: #84a7ff;
+}
+.chatTab ul li .comments{
+	color: #fff;
+	vertical-align: bottom;
+}
+.chatTab ul li .comments>img{
+	width: 0.24rem;
+	vertical-align: bottom;
+}
+.chatTab .closeBtn{
+	position: absolute;
+	z-index: 111;
+	top: 0;
+	right: 0;
+	width: 0.15rem;
+	height: 0.15rem;
+	padding: 0.125rem;
+	background: url(../images/close_icon.png) no-repeat center center;
+	background-size: 0.15rem;
+}
+@media screen and (orientation: landscape) {/*横屏 隐藏聊天*/
+	.chatBtn{display: none;}
+	.chatTab{display: none;}
+	.chatOp{display: none;}
+} 
+/*发送聊天*/
+.chatOp{
+	position: absolute;
+    z-index: 10;
+    bottom: 0;
+    width: 100%;
+    height: 0.5rem;
+    background: #221d24;
+    display: none;
+}
+
+.chatOp .chatEmotion{
+    position: absolute;
+    left: 0;
+    top: 0.115rem;
+}
+.chatOp .chatEmotion>img {
+    display: block;
+    width: 0.25rem;
+    margin-left: 0.15rem;
+}
+.chatOp .chatWord {
+    position: absolute;
+    top: 0.08rem;
+    left: 0.515rem;
+    right: 0.765rem;
+    height: 0.35rem;
+    border-radius: 4px;
+}
+.chatOp .chatWord  textarea {
+    height: 100%;
+    width: 100%;
+    outline: none;
+    resize: none;
+    vertical-align: top;
+    background: #4c494d;
+    box-sizing: border-box;
+    border-radius: 4px;
+    color:#FFF;
+    font-size: 0.15rem;
+    padding: 0.09rem;
+}
+.chatOp button {
+    position: absolute;
+    top: 0.08rem;
+    right: 0.14rem;
+    width: 0.5rem;
+    height: 0.35rem;
+    background: #464247;
+    border-radius: 4px;
+    text-align: center;
+    float: right;
+    outline: none;
+    color: #888688;
+    font-size: 0.15rem;
+    font-family: "Microsoft YaHei", "YaHei", "微软雅黑", "SimHei", "黑体";
+}
+.oline-em{
+	font-style: normal;
+	padding:0 0.05rem;
+}
+ /*表情*/
+#facebox {
+	background: #2f2b31;
+}
+#facebox .qqFace {
+	float: left;
+	text-align: left;
+	background: #2f2b31;
+}
+.qqFace-box{
+	background: #2f2b31;
+}
+#facebox li {
+	display: inline-block;
+	padding: 10px 0;
+	width: 14%;
+	text-align: center;
+}
+#facebox li>img{
+	width: 0.24rem;
+}
+.text-center{
+ 	height: 12px;
+ 	width: 100%;
+ 	background: #2f2b31;
+ }
+.text-center a{
+	display: inline-block;
+	width: 0.06rem;
+	height: 0.06rem;
+	vertical-align: top;
+	margin-right: 0.05rem;
+	border-radius: 100%;
+	background: #cfcfcf;
+}
+.text-center a.active {
+	background: #a1a1a1;
+} 
+/*播放器相关*/
+.loading{
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -0.25rem;
+    margin-left: -0.25rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    background: url(../images/loading.gif) center center no-repeat;
+    background-size: contain;
+}
+.videoTab{
+	position:absolute;
+    bottom: 0;
+    width: 100%;
+    height: 0.5rem;
+    background: rgba(0,0,0,0.19);
+}
+ .btn-play{
+	position: absolute;
+    left: 0.14rem;
+    top: 0.09rem;
+    width: 0.33rem;
+    height: 0.33rem;
+    background-repeat:no-repeat;
+    background-size: contain;
+}
+.player_play{
+ 	background: url(../images/player_play.png) no-repeat;
+ 	background-size: contain;
+ }
+.player_pause{
+ 	background: url(../images/player_pause.png) no-repeat;
+ 	background-size: contain;
+ }
+ .live-time{
+	position: absolute;
+    left: 0.57rem;
+    top: 0.17rem;
+    color: #fff;
+}
+/*全屏*/
+.fullscreen{
+	position: absolute;
+    right: 0.26rem;
+    top: 0.04rem;
+    width: 0.42rem;
+    height: 0.42rem;
+    background-repeat:no-repeat;
+    background-size:0.21rem 0.21rem;
+    background-position: center center;   
+}
+.player_big{
+	background-image: url(../images/player_big.png);
+}
+.player_small{
+	background-image: url(../images/player_small.png);
+}
+/*切换vr*/
+.vrchange{
+	position: absolute;
+    right: 1.35rem;
+    top: 0.12rem;
+    width: 0.26rem;
+    height: 0.26rem;
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: #fff;
+}
+.vrchange0{
+	/*background-image: url(../images/vr_0.png);*/
+}
+.vrchange1{
+	/*background-image: url(../images/vr_sel.png);*/
+}
+/*陀螺仪*/
+.gyroscope{
+	position: absolute;
+    right: 0.75rem;
+    top: 0.12rem;
+    width: 0.25rem;
+    height: 0.26rem;
+    background-repeat:no-repeat;
+    background-size: contain;
+    color: #fff;
+}
+.player_gyro{
+	/*background-image: url(../images/player_gyro.png);*/
+}
+.player_gyro_sel{
+	/*background-image: url(../images/player_gyro_sel.png);*/
+}
+/*翻转*/
+.reversal{
+	position: absolute;
+    right: 0.15rem;
+    top: 0.12rem;
+    width: 0.25rem;
+    height: 0.26rem;
+    background-repeat:no-repeat;
+    background-size: contain;
+    background-position: center;
+    color: #fff;
+}
+.overthrow{
+	/*background-image: url(../images/overthrow.png);*/
+}
+.overthrow_sel{
+	/*background-image: url(../images/overthrow_sel.png);*/
+}
+.vrchange,.gyroscope,.reversal{
+	border-radius: 0.05rem;
+	border: 0.01rem solid #fff;
+	font-size: 0.14rem;
+	width: 0.5rem;
+	height: 0.31rem;
+	line-height: 0.31rem;
+	top: 0.09rem;
+	text-align: center;
+}
+.vrMode .vrchange,.vrMode .gyroscope,.vrMode .reversal{
+	color: #0065fd;
+	border-color: #0065fd;
+}
