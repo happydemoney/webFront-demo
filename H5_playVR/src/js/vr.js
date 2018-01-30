@@ -162,6 +162,9 @@ function vr() {
         "}"
         ;
 
+    var _isIOS = false;
+    var _isAndroid = false;
+    var _mediaType = 0; /* 0: mp4, 1: m3u8 */
 
     function onDeviceOrientation(event) {
         event.preventDefault();
@@ -361,7 +364,6 @@ function vr() {
             return;
         $("#showInfo").append("_needCanvas1" + _needCanvas + '<br/>');
         var width = _videoCtl.videoWidth || _videoCtl.width;
-        // document.getElementById('result').innerText=_isIOS+"--"+_needCanvas;
         var height = _videoCtl.videoHeight || _videoCtl.height;
         if (_needCanvas || originallyMode == false) {
             $("#showInfo").append("_needCanvas2" + _needCanvas + '<br/>');
@@ -510,7 +512,6 @@ function vr() {
         _renderer.setSize(document.body.clientWidth, document.body.clientHeight);
         document.body.appendChild(_renderer.domElement);
         animate();
-        // document.getElementById('result').innerText="dddddd----";
         // var container;
         // container = document.getElementById( 'container' );
         // _stats = new Stats();
@@ -582,14 +583,11 @@ function vr() {
             _videoCtl.setAttribute("x5-video-player-type", "h5");
             _videoCtl.setAttribute("autoplay", "autoplay");
         }
-        //  document.getElementById('result').innerText="dddddd";
         // _videoCtl.id='video'
         //  document.body.appendChild(_videoCtl);
-        //  document.getElementById('result').innerText="dddddd"+_mediaType+Hls.isSupported();
         // Media Source Extension
         if (_mediaType != 0 && Hls.isSupported()) {
             var oDiv = document.createElement('input');
-            //   document.getElementById('result').innerText="dddddd"+_mediaType+Hls.isSupported();
             // document.body.appendChild(oDiv);
 
             _hls = new Hls({ debug: true });
@@ -603,20 +601,14 @@ function vr() {
                 // console.log("HLS Error", e.dataType);
                 // alert("HLS Error", e.dataType);
                 //   oDiv.placeholder= e.dataType;
-                //   document.getElementById('result').innerText = e.dataType;
                 // alert("Error " + e.data.details);
             });
             // load the stream
-            //document.getElementById('result').innerText="_hls+Hls"+stream_url;
             _hls.loadSource(stream_url);
         }
         else {
-            //  document.getElementById('result').innerText="-"+navigator.userAgent;
-            //document.getElementById('result').innerText="Version-"+navigator.userAgent.substr(navigator.userAgent.indexOf('OS')+2 ,2)+"."+navigator.userAgent.substr(navigator.userAgent.indexOf('OS')+5 ,2);
             if (navigator.userAgent.substr(navigator.userAgent.indexOf('OS') + 3).split('_')[0] < 10)
-                // document.getElementById('result').innerText="-"+Boolean(navigator.userAgent.match(/OS 10_[1-9] /i)   || navigator.userAgent.match(/OS 10_[1-9]_[0-9] /i) || navigator.userAgent.match(/OS [8-9]_[0-9] /i)  || navigator.userAgent.match(/OS [8-9]_[0-9]_[0-9] /i))
                 _videoCtl.play();
-            //  document.getElementById('result').innerText="��������֧�ָ���ƵԴ����"
         }
 
         _initTimer = setInterval(init2, 500);
@@ -660,7 +652,6 @@ function vr() {
     // 所有播放器的响应事件 - 比如暂停，播放错误等
     var eventTester = function (e) {
         _videoCtl.addEventListener(e, function () {
-            //  document.getElementById('result').innerText=e
             $("#showInfo").append("_videoCtl---" + e + '<br/>');
         }, false);
     }
@@ -708,6 +699,4 @@ function vr() {
             else
                 return 0;
         }
-
 };
-
