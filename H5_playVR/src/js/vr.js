@@ -334,14 +334,11 @@ function vr() {
         }
         _renderer.setSize(window.innerWidth, window.innerHeight);
     }
-    var _isIOS = false;
-    var _isAndroid = false;
+
     function OSDetect() {
         _isIOS = /i(Pad|Phone|Pod)/i.test(navigator.userAgent);
         _isAndroid = /android/i.test(navigator.userAgent);
     }
-
-    var _mediaType = 0; /* 0: mp4, 1: m3u8 */
 
     // 视频是否是MP4或者m3u8
     function mediaTypeDetect(stream_url) {
