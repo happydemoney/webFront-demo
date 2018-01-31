@@ -24,12 +24,10 @@ var channelREl = false;
 // vr_mode, 0:全景 1:半景 2:小行星 3:鱼眼
 function init(url, obj, vr_mode, _playType) {
     playType = _playType;
-    console.log("init" + vr_mode);
     objct = obj;
     Setinit(url, vr_mode);
 }
 function Setinit(url, vr_mode) {
-    console.log("onSubmit");
     var container;
     if (url != undefined) {
         // container = document.getElementById('main');
@@ -52,7 +50,6 @@ function Setinit(url, vr_mode) {
 //    head.appendChild(script);
 //}
 function load_player(url, vr_mode) {
-    console.log('obj------', objct[2]);
     vrs.init(url, vr_mode);
     vrs.openGyros(true);
     window.setInterval(timefun, 500);
@@ -60,7 +57,6 @@ function load_player(url, vr_mode) {
     $(objct[2]).click(iscan);
     $(objct[5]).click(isVR);
     objct[2].addEventListener("touchstart", iscan, false);
-    console.log(vr_mode);
     if (vr_mode == 0 || vr_mode == 1) {
         objct[1].style.display = "block";
         $(objct[1]).click(gyroscope);
@@ -168,8 +164,6 @@ function formatTime(value) {
     return result;
 }
 function handleVideoEvent(evt) {
-    // console.log("HLS Error", autoPlay);
-    // document.getElementById('result').innerText="dddddd"+evt.type;
     switch (evt.type) {
         case 'pause':
             // objct[2].className ="btn-play player_play";

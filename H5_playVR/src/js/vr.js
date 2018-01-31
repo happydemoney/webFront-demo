@@ -3,6 +3,21 @@
  */
 /* global vr  app*/
 var _ts;
+var vr_gobal = {
+    debug: true,
+    firstLoad: true,
+    logObj: null,
+    log: function (logText) {
+        if (!this.debug) {
+            return;
+        }
+        if (this.firstLoad) {
+            this.firstLoad = false;
+            this.logObj = $('#showInfo');
+        }
+        this.logObj.append(logText);
+    }
+}; // 控制调试信息 - 开发时debug设置为true，发布设为false
 function vr() {
     var _gyrosOn = false; // 是否启用陀螺仪
     var _isMouseDown;
@@ -27,7 +42,7 @@ function vr() {
     var _needCanvas = false; // 是否需要canvas的渲染
     var _uniforms;
     var originallyMode = false; // false 是2d画面，不是全景
-    var _vrMode; // 是否是vr模式
+    var _vrMode; // vr_mode, 0:全景 1:半景 2:小行星 3:鱼眼
     var _firstClicked = false;
     var _lasty, _lastx, _lastz;
     var _updateOrientation = false;
@@ -236,24 +251,25 @@ function vr() {
     function animate() {
         requestAnimationFrame(animate);
         _camera.lookAt(_scene.position);
-        //if ( _videoCtl.readyState === video.HAVE_ENOUGH_DATA ) {
-        //    var ctc = _canvas2DPic.getContext("2d");
-        //    ctc.drawImage( _videoCtl, 0, 0 );
-        //    if ( _texture ) _texture.needsUpdate = true;
-        //
-        //}
-        // document.getElementById('result').innerText=_needCanvas+""+originallyMode
+
         if (_needCanvas || originallyMode == false) {
             var ctx = _canvas2DPic.getContext("2d");
-            // ctx.drawImage(_videoCtl, 0, 0,_canvas2DPic.width, _canvas2DPic.height);
-            if (originallyMode == true) ctx.drawImage(_videoCtl, 0, 0); else ctx.drawImage(_videoCtl, 0, 0, _canvas2DPic.width, _canvas2DPic.height)
-            if (_texture) _texture.needsUpdate = true;
+            if (originallyMode == true) {
+                ctx.drawImage(_videoCtl, 0, 0);
+            } else {
+                ctx.drawImage(_videoCtl, 0, 0, _canvas2DPic.width, _canvas2DPic.height);
+            }
+            if (_texture) {
+                _texture.needsUpdate = true;
+            }
         }
+        // 全景 or 半景
         if (_vrMode <= 1 && originallyMode == true) {
             var quat = getRotationQuat();
             _camera.setRotationFromQuaternion(quat);
             //  _texture.needsUpdate = true;
         } else {
+            // 小行星 or 鱼眼
             if (originallyMode == true) {
                 _uniforms.phi0.value = _viewpointLat;
                 _uniforms.lambda0.value = _viewpointLon;
@@ -353,50 +369,65 @@ function vr() {
 
     // 主函数
     function init2() {
-
+        vr_gobal.log('do init2 <br/>');
         if (_videoCtl.readyState === _videoCtl.HAVE_ENOUGH_DATA) {
             clearInterval(_initTimer);
         }
-        else
+        else {
             return;
-        $("#showInfo").append("_needCanvas1" + _needCanvas + '<br/>');
+        }
+
+        vr_gobal.log("_needCanvas： " + _needCanvas + '<br/>');
+
         var width = _videoCtl.videoWidth || _videoCtl.width;
         var height = _videoCtl.videoHeight || _videoCtl.height;
+
+        vr_gobal.log("_videoCtl - width： " + width + " ,height: " + height + '<br/>');
+
         if (_needCanvas || originallyMode == false) {
-            $("#showInfo").append("_needCanvas2" + _needCanvas + '<br/>');
+
             _canvas2DPic = document.createElement("canvas");
             _canvas2DPic.width = width;
             _canvas2DPic.height = height;
             _canvas2DPic.style.display = "none";
             _canvas2DPic.style.backgroundColor = "#000";
+
             if (_isIOS) {
                 _texture = new THREE.CanvasTexture(_canvas2DPic);
                 _texture.minFilter = THREE.LinearFilter;
-                $("#showInfo").append("_isIOS3" + _isIOS + '<br/>');
+                vr_gobal.log("do CanvasTexture" + '<br/>');
             } else {
                 _texture = new THREE.VideoTexture(_videoCtl);
                 _texture.minFilter = THREE.LinearFilter;
-                $("#showInfo").append("VideoTexture4" + '<br/>');
+                vr_gobal.log("非全景 do VideoTexture" + '<br/>');
             }
         }
-        if (_needCanvas == false || originallyMode == true) {
+        if (_needCanvas == false && originallyMode == true) {
             if (!_isIOS) {
                 _texture = new THREE.VideoTexture(_videoCtl);
                 _texture.minFilter = THREE.LinearFilter;
+                vr_gobal.log("全景 do VideoTexture" + '<br/>');
             }
         }
         if (originallyMode == true) {
-            $("#showInfo").append("_camera5" + originallyMode + '<br/>');
+
+            vr_gobal.log("全景 do _camera <br/>");
+
             _camera = new THREE.PerspectiveCamera(_fov, window.innerWidth / window.innerHeight, 1, 1000);
-            if (_reversal == true) _camera.layers.enable(1); else _camera.layers.enable(0);
-        } else {
-            $("#showInfo").append("_camera6" + originallyMode + '<br/>');
-            _camera = new THREE.OrthographicCamera(-window.innerWidth / 2, window.innerWidth / 2, window.innerHeight / 2, -window.innerHeight / 2,
-                0, 30);
+
+            if (_reversal == true) {
+                _camera.layers.enable(1);
+            } else {
+                _camera.layers.enable(0);
+            }
         }
+        /*else {
+            vr_gobal.log("非全景 do _camera <br/>");
+            _camera = new THREE.OrthographicCamera(-window.innerWidth / 2, window.innerWidth / 2, window.innerHeight / 2, -window.innerHeight / 2, 0, 30);
+        }*/
 
         if (_vrMode == 0 && originallyMode == true) {
-            $("#showInfo").append("_vrMode7" + originallyMode + '<br/>');
+            vr_gobal.log("全景模式<br/>");
             _scene = new THREE.Scene();
             var geometry = new THREE.SphereGeometry(20, 20, 20, Math.PI / 2); //radius, widthSegments, heightSegments, phiStart
             geometry.scale(-1, 1, 1);
@@ -424,7 +455,7 @@ function vr() {
 
         } else if (_vrMode == 1 && originallyMode == true) {
             // 180 degree half sphere
-
+            vr_gobal.log("半景模式<br/>");
             _uniforms = {
                 videoTexture: { value: _texture },
             };
@@ -445,6 +476,7 @@ function vr() {
 
         } else if (_vrMode == 2 && originallyMode == true) {
             // Little planet mode
+            vr_gobal.log("小行星模式<br/>");
             _uniforms = {
                 videoTexture: { value: _texture },
                 scale: { value: 1.0 },
@@ -469,6 +501,7 @@ function vr() {
 
         } else if (_vrMode == 3 && originallyMode == true) {
             // Fisheye mode
+            vr_gobal.log("鱼眼模式<br/>");
             _uniforms = {
                 videoTexture: { value: _texture },
                 scale: { value: 1.2 },
@@ -492,23 +525,35 @@ function vr() {
             );
             _scene.add(_sphere);
         }
+
         if (originallyMode == false) {
-            $("#showInfo").append("_vrMode10" + originallyMode + '<br/>');
+            vr_gobal.log("普通模式的场景创建<br/>");
             _scene = new THREE.Scene();
             _camera = new THREE.OrthographicCamera(-window.innerWidth / 2, window.innerWidth / 2, window.innerHeight / 2, -window.innerHeight / 2, 0, 30);
+
             var material = new THREE.MeshBasicMaterial({ map: _texture, overdraw: 0.5 });
             var plane = new THREE.PlaneGeometry(window.innerWidth, window.innerHeight, 0, 0);
+
             mesh = new THREE.Mesh(plane, material);
             mesh.scale.x = mesh.scale.y = mesh.scale.z = 1;
             _scene.add(mesh);
         }
-        if (isokt == true) return; else isokt = true;
+
+        if (isokt == true) {
+            return;
+        } else {
+            isokt = true;
+        }
+
         _renderer = new THREE.WebGLRenderer();
         _renderer.setClearColor(0x101010);
         _renderer.setPixelRatio(window.devicePixelRatio);
         _renderer.setSize(document.body.clientWidth, document.body.clientHeight);
+
         document.body.appendChild(_renderer.domElement);
+
         animate();
+
         // var container;
         // container = document.getElementById( 'container' );
         // _stats = new Stats();
@@ -535,6 +580,7 @@ function vr() {
         _ts = ts;
     }
     this.channelreversal = function (reversal) {
+        vr_gobal.log('通道反转<br/>');
         _reversal = reversal;
         init2();
     }
@@ -566,7 +612,6 @@ function vr() {
         _videoCtl.autoplay = "autoplay";
 
         if (_isIOS) {
-            $("#showInfo").append(_isIOS + '<br/>');
             // ios 10 use playsinline instead of webkit-playsinline
 
             _videoCtl.setAttribute("playsinline", "");
@@ -584,18 +629,17 @@ function vr() {
         //  document.body.appendChild(_videoCtl);
         // Media Source Extension
         if (_mediaType != 0 && Hls.isSupported()) {
-            var oDiv = document.createElement('input');
+            // var oDiv = document.createElement('input');
             // document.body.appendChild(oDiv);
 
-            _hls = new Hls({ debug: true });
+            _hls = new Hls({ debug: false });
 
             _hls.attachMedia(_videoCtl);
             _hls.on(Hls.Events.MANIFEST_PARSED, function (e) {
-
                 // _videoCtl.play();
             });
             _hls.on(Hls.Events.ERROR, function (e) {
-                // console.log("HLS Error", e.dataType);
+                alert("HLS Error", e.dataType);
                 // alert("HLS Error", e.dataType);
                 //   oDiv.placeholder= e.dataType;
                 // alert("Error " + e.data.details);
@@ -607,6 +651,25 @@ function vr() {
             if (navigator.userAgent.substr(navigator.userAgent.indexOf('OS') + 3).split('_')[0] < 10)
                 _videoCtl.play();
         }
+
+        _videoCtl.addEventListener("loadeddata", function () {
+
+            vr_gobal.log('videoWidth: ' + (_videoCtl.videoWidth || _videoCtl.width) + '<br/>');
+            vr_gobal.log('videoHeight: ' + (_videoCtl.videoHeight || _videoCtl.height) + '<br/>');
+
+            //_videoCtl.width = THREE.Math.ceilPowerOfTwo(_videoCtl.videoWidth);
+            //_videoCtl.height = THREE.Math.ceilPowerOfTwo(_videoCtl.videoHeight);
+
+            //image.width = _videoCtl.width;
+            //image.height = _videoCtl.height;
+            //image.width = video.videoWidth;
+            //image.height = video.videoHeight;
+            //imageContext.fillRect( 0, 0, video.videoWidth, video.videoHeight);
+            //imageContext.fillRect(0, 0, image.width, image.height);
+            //alert(_videoCtl.videoWidth);
+            //alert(_videoCtl.videoHeight);
+            //console.log(video.videoWidth);
+        });
 
         _initTimer = setInterval(init2, 500);
     },
@@ -649,7 +712,7 @@ function vr() {
     // 所有播放器的响应事件 - 比如暂停，播放错误等
     var eventTester = function (e) {
         _videoCtl.addEventListener(e, function () {
-            $("#showInfo").append("_videoCtl---" + e + '<br/>');
+            //vr_gobal.log("_videoCtl---" + e + '<br/>');
         }, false);
     }
     this.setVCallback = function () {

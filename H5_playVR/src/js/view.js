@@ -150,11 +150,9 @@ $(window).bind('orientationchange', function () {
 /*横屏隐藏发表评论*/
 function orient() {
 	if (window.orientation == 0 || window.orientation == 180) {
-		console.log('portrait竖屏');
 		$(".chatBtn").show();
 
 	} else if (window.orientation == 90 || window.orientation == -90) {
-		console.log('landscape横屏');
 		$(".chatBtn").hide();
 		$(".chatTab").hide();
 		$(".chatOp").hide();
@@ -174,6 +172,5 @@ function browserRedirect() {
 	if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM)) {
 		document.getElementsByTagName('html')[0].style.fontSize = 480 * 100 / 375 + 'px';
 		$(".chatBtn").show(); /*PC时，视为横屏，可发评论*/
-		console.log("PC");
 	}
 }

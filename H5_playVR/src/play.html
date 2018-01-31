@@ -44,8 +44,6 @@
 		if ('uLive' != playType && '' != fse) {
 			fse += "&vid=" + playId;//点播鉴权需参数vid
 		}
-		console.log('playId=' + playId + ';playType=' + playType);
-		console.log('鉴权参数' + fse);
 		$.ajax({
 			type: "POST",
 			url: "flashplayerAction!flashParamJson.action" + getUrl,
@@ -63,6 +61,7 @@
 					var f = json[0].f;
 					url = f.substring(f.indexOf("/live/"), f.lastIndexOf("?")) + "/playlist.m3u8?liveID=" + playId;
 					/*url="http://play1.live.com"+url;*/
+					url = "http://192.168.1.206:80" + url; // 223测试环境使用
 				} else { //点播
 					$.ajax({
 						url: 'yzplayerAction!xmlMethod.action?str=' + playId + '_[$pat0]',
@@ -94,7 +93,6 @@
 				if ('' != fse) url += ((-1 == url.lastIndexOf("?")) ? '?' : '&') + fse;
 				// url='http://192.168.1.210:8010'+url;
 				// url= 'video/1.m3u8';
-				console.log('播放m3u8地址：' + url);
 				// url = "http://192.168.1.210:8010/live/26be6931c3/playlist.m3u8?liveID=100027749";
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) { }
@@ -148,7 +146,6 @@
 				processData: false,
 				async: false, //请求同步
 				success: function (json) {
-					console.log("pc getOnline:" + json);
 					for (var i = 0; i < json.length; i++) {
 						$("#" + json[i].name).text(json[i].value);
 					}
@@ -177,7 +174,8 @@
 
 <body>
 	<input type="hidden" id="recodeID">
-	<div id="showInfo" style="position: absolute;width: 90%; height:50%; z-index: 10;color: red;overflow: auto;display:none;">显示信息:
+	<div id="showInfo" style="position: absolute;width: 90%; height:50%; z-index: 10;color: red;overflow: auto;display:none;">
+		显示信息:
 		<br>
 	</div>
 	<!--点击进入聊天-->

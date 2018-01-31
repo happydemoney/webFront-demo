@@ -1,5 +1,5 @@
-(function($) {
-    $.fn.qqFace = function(options) {
+(function ($) {
+    $.fn.qqFace = function (options) {
         var defaults = {
             id: 'facebox',
             path: 'face/',
@@ -14,125 +14,123 @@
         if (assign.length <= 0) {
             alert('缺少表情赋值对象。');
             return false;
-        }	
-        
-        $("#emoji").bind("click",function(e) {
-        	if($("#chatMess")){
-        		$("#chatMess").blur();
-        	}
+        }
 
-        	console.log("显示表情");
-        	var strFace='';
-            var labFace, offset, top; 
+        $("#emoji").bind("click", function (e) {
+            if ($("#chatMess")) {
+                $("#chatMess").blur();
+            }
+
+            var strFace = '';
+            var labFace, offset, top;
             if ($('#' + id).length <= 0) {
-                    var windowWidth = $(window).width(),
-                        control = '';
-                    strFace = '<div id="' + id + '" style="position:absolute;display:none;z-index:1002;width:' + windowWidth + 'px;padding: 0 1%;"><div class="qqFace-box" style="width:' + windowWidth * 5 + 'px">';
-                    for (var i = 1; i <= 5; i++) {
-                        strFace += '<div class="qqFace" style="width:' + windowWidth + 'px">';
-                        for (var j = 1; j <= 20; j++) {
-                            var index = (i - 1) * 20 + j;
-                            labFace = getFace_index(index);
-                            if (!labFace) {
-                                continue;
-                            }
-                            strFace += '<li onclick="$(\'#' + option.assign + '\').setCaret();$(\'#' + option.assign + '\').insertAtCaret(\'' + labFace + '\');"><img width="24" src="' + path + 'Expression_' + index + '@2x.png" /></li>';
+                var windowWidth = $(window).width(),
+                    control = '';
+                strFace = '<div id="' + id + '" style="position:absolute;display:none;z-index:1002;width:' + windowWidth + 'px;padding: 0 1%;"><div class="qqFace-box" style="width:' + windowWidth * 5 + 'px">';
+                for (var i = 1; i <= 5; i++) {
+                    strFace += '<div class="qqFace" style="width:' + windowWidth + 'px">';
+                    for (var j = 1; j <= 20; j++) {
+                        var index = (i - 1) * 20 + j;
+                        labFace = getFace_index(index);
+                        if (!labFace) {
+                            continue;
                         }
-                        strFace += '<li onclick="$(\'#' + option.assign + '\').deleteCaret();" ><img width="24" src="' + path + 'faceDelete@2x.png" /></li></div>';
-                        if (i === 1) {
-                            control += "<a class='active'></a>";
-                        } else {
-                            control += "<a></a>";
-                        }
+                        strFace += '<li onclick="$(\'#' + option.assign + '\').setCaret();$(\'#' + option.assign + '\').insertAtCaret(\'' + labFace + '\');"><img width="24" src="' + path + 'Expression_' + index + '@2x.png" /></li>';
                     }
-                    strFace += "<div style='clear:both'></div></div><div class='text-center' style='text-align:center;' >" + control + "</div></div>";
-                    $(this).parent().append(strFace);
-                    offset = $(this).position();
-                    top = offset.top + $(this).outerHeight();
-                   
-                   	var chatOpH = document.getElementsByClassName('chatOp')[0].offsetHeight;
-                   	console.log(chatOpH);
-                   	
-                   	$('#' + id).css('bottom', '0.365rem');
-                    $('#' + id).css('left',0);
-                    $('#' + id).data('data', {
-                        index: 0
-                    });
-                    var isDrag = false,
-                        tx, x, el = $('#' + id).find(".qqFace-box").eq(0).get(0);
-                    $('#' + id)[0].addEventListener('touchstart', function(e) {
-                      //  e.preventDefault();
-                        //isDrag = true;
-                        tx = e.touches[0].pageX;
-                    }, false);
-                    $('#' + id)[0].addEventListener('touchmove', function(e) {
-                       e.preventDefault();
-                        x = e.touches[0].pageX - tx;
-                        var width = $(this).data('data').index * windowWidth;
-                        var value = 'translate3d(' + (x - width) + 'px, 0, 0)';
+                    strFace += '<li onclick="$(\'#' + option.assign + '\').deleteCaret();" ><img width="24" src="' + path + 'faceDelete@2x.png" /></li></div>';
+                    if (i === 1) {
+                        control += "<a class='active'></a>";
+                    } else {
+                        control += "<a></a>";
+                    }
+                }
+                strFace += "<div style='clear:both'></div></div><div class='text-center' style='text-align:center;' >" + control + "</div></div>";
+                $(this).parent().append(strFace);
+                offset = $(this).position();
+                top = offset.top + $(this).outerHeight();
+
+                var chatOpH = document.getElementsByClassName('chatOp')[0].offsetHeight;
+
+                $('#' + id).css('bottom', '0.365rem');
+                $('#' + id).css('left', 0);
+                $('#' + id).data('data', {
+                    index: 0
+                });
+                var isDrag = false,
+                    tx, x, el = $('#' + id).find(".qqFace-box").eq(0).get(0);
+                $('#' + id)[0].addEventListener('touchstart', function (e) {
+                    //  e.preventDefault();
+                    //isDrag = true;
+                    tx = e.touches[0].pageX;
+                }, false);
+                $('#' + id)[0].addEventListener('touchmove', function (e) {
+                    e.preventDefault();
+                    x = e.touches[0].pageX - tx;
+                    var width = $(this).data('data').index * windowWidth;
+                    var value = 'translate3d(' + (x - width) + 'px, 0, 0)';
+                    el.style.webkitTransform = value;
+                    el.style.mozTransform = value;
+                    el.style.transform = value;
+                    isDrag = true;
+                }, false);
+                $('#' + id)[0].addEventListener('touchend', function (e) {
+                    if (isDrag) {
+                        var index = $(this).data('data').index,
+                            width = index * windowWidth;
+                        if (x < -50) { //左滑
+                            if (index < 4) {
+                                index = index + 1;
+                                $(this).data('data', {
+                                    index: index
+                                });
+                                width += windowWidth;
+                            }
+                        } else if (x > 50) {
+                            if (index >= 1) {
+                                index = index - 1;
+                                $(this).data('data', {
+                                    index: index
+                                });
+                                width -= windowWidth;
+                            }
+                        }
+                        $('#' + id).find(".text-center a").removeClass('active').eq(index).addClass('active');
+                        var value = 'translate3d(-' + width + 'px, 0, 0)';
                         el.style.webkitTransform = value;
                         el.style.mozTransform = value;
                         el.style.transform = value;
-                        isDrag = true;	
-                    }, false);
-                    $('#' + id)[0].addEventListener('touchend', function(e) {
-                        if (isDrag) {
-                            var index = $(this).data('data').index,
-                                width = index * windowWidth;
-                            if (x < -50) { //左滑
-                                if (index < 4) {
-                                    index = index + 1;
-                                    $(this).data('data', {
-                                        index: index
-                                    });
-                                    width += windowWidth;
-                                }
-                            } else if (x > 50) {
-                                if (index >= 1) {
-                                    index = index -1 ;
-                                    $(this).data('data', {
-                                        index: index
-                                    });
-                                    width -= windowWidth;
-                                }
-                            }
-                            $('#' + id).find(".text-center a").removeClass('active').eq(index).addClass('active');
-                            var value = 'translate3d(-' + width + 'px, 0, 0)';
-                            el.style.webkitTransform = value;
-                            el.style.mozTransform = value;
-                            el.style.transform = value;
-                        }
-                        isDrag = false;
-                    }, false);
-                    $('#' + id).bind("click touchstart touchend","li",function(e){
-                        e.stopPropagation();
-                    });
-                    if(IsPC()){
-				     	$(".text-center a").bind("click touchstart touchend",(function(){
-				     		$(this).addClass('active').siblings().removeClass('active');
-				     		var aIndex = $(this).index();
-				     		var width1 = $(window).width() * aIndex;
-				     		var value1 = 'translate3d(-' + width1 + 'px, 0, 0)';
-                            el.style.webkitTransform = value1;
-                            el.style.mozTransform = value1;
-                            el.style.transform = value1;
-				     	}));
-				     }                 
+                    }
+                    isDrag = false;
+                }, false);
+                $('#' + id).bind("click touchstart touchend", "li", function (e) {
+                    e.stopPropagation();
+                });
+                if (IsPC()) {
+                    $(".text-center a").bind("click touchstart touchend", (function () {
+                        $(this).addClass('active').siblings().removeClass('active');
+                        var aIndex = $(this).index();
+                        var width1 = $(window).width() * aIndex;
+                        var value1 = 'translate3d(-' + width1 + 'px, 0, 0)';
+                        el.style.webkitTransform = value1;
+                        el.style.mozTransform = value1;
+                        el.style.transform = value1;
+                    }));
                 }
+            }
 
-           $('#' + id).toggle();  
+            $('#' + id).toggle();
             e.stopPropagation();
         });
 
-        $(document).bind("click",function() {
+        $(document).bind("click", function () {
 
             $('#' + id).hide();
-        });     
+        });
     };
 })(jQuery);
 jQuery.fn.extend({
-    selectContents: function() {
-        $(this).each(function(i) {
+    selectContents: function () {
+        $(this).each(function (i) {
             var node = this;
             var selection, range, doc, win;
             if ((doc = node.ownerDocument) && (win = doc.defaultView) && typeof win.getSelection != 'undefined' && typeof doc.createRange != 'undefined' && (selection = window.getSelection()) && typeof selection.removeAllRanges != 'undefined') {
@@ -149,18 +147,18 @@ jQuery.fn.extend({
         });
     },
 
-    setCaret: function() {
+    setCaret: function () {
         if (!(/msie/.test(navigator.userAgent.toLowerCase()))) return;
-        var initSetCaret = function() {
+        var initSetCaret = function () {
             var textObj = $(this).get(0);
             textObj.caretPos = document.selection.createRange().duplicate();
         };
         $(this).click(initSetCaret).select(initSetCaret).keyup(initSetCaret);
     },
 
-    insertAtCaret: function(textFeildValue) {
-    	document.getElementsByClassName('sendBtn')[0].style.backgroundColor = '#42d6ff';
-    	document.getElementsByClassName('sendBtn')[0].style.color = '#FFF';
+    insertAtCaret: function (textFeildValue) {
+        document.getElementsByClassName('sendBtn')[0].style.backgroundColor = '#42d6ff';
+        document.getElementsByClassName('sendBtn')[0].style.color = '#FFF';
         var textObj = $(this).get(0);
         if (document.all && textObj.createTextRange && textObj.caretPos) {
             var caretPos = textObj.caretPos;
@@ -175,14 +173,14 @@ jQuery.fn.extend({
             var len = textFeildValue.length;
             textObj.setSelectionRange(rangeStart + len, rangeStart + len);
             textObj.blur(); //注释点为了让选择表情后输入框聚焦
-           	$(this).blur();
-            if (!IsPC()){
-            	textObj.blur(); //注释点为了让选择表情后输入框聚焦
-            	$(this).blur();
+            $(this).blur();
+            if (!IsPC()) {
+                textObj.blur(); //注释点为了让选择表情后输入框聚焦
+                $(this).blur();
 
-            }else{
-            	textObj.focus(); //注释点为了让选择表情后输入框聚焦
-            	$(this).focus();
+            } else {
+                textObj.focus(); //注释点为了让选择表情后输入框聚焦
+                $(this).focus();
             }
 
         } else {
@@ -193,7 +191,7 @@ jQuery.fn.extend({
      * [deleteCaret description]
      * @return {[type]} [description]
      */
-    deleteCaret: function() {
+    deleteCaret: function () {
         var textObj = $(this),
             val = textObj.val(),
             reg = /(\[[^@]{1,3}\])$/;
@@ -320,11 +318,11 @@ function getFace_index(val) {
             '[OK]': 90
         };
 
-    if (typeof(val) === 'string') {
+    if (typeof (val) === 'string') {
         return face_list[val];
-        
+
     }
-    if (typeof(val) === 'number') {
+    if (typeof (val) === 'number') {
         for (var i in face_list) {
             list[face_list[i]] = i;
         }
