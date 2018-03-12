@@ -656,19 +656,6 @@ function vr() {
 
             vr_gobal.log('videoWidth: ' + (_videoCtl.videoWidth || _videoCtl.width) + '<br/>');
             vr_gobal.log('videoHeight: ' + (_videoCtl.videoHeight || _videoCtl.height) + '<br/>');
-
-            //_videoCtl.width = THREE.Math.ceilPowerOfTwo(_videoCtl.videoWidth);
-            //_videoCtl.height = THREE.Math.ceilPowerOfTwo(_videoCtl.videoHeight);
-
-            //image.width = _videoCtl.width;
-            //image.height = _videoCtl.height;
-            //image.width = video.videoWidth;
-            //image.height = video.videoHeight;
-            //imageContext.fillRect( 0, 0, video.videoWidth, video.videoHeight);
-            //imageContext.fillRect(0, 0, image.width, image.height);
-            //alert(_videoCtl.videoWidth);
-            //alert(_videoCtl.videoHeight);
-            //console.log(video.videoWidth);
         });
 
         _initTimer = setInterval(init2, 500);
