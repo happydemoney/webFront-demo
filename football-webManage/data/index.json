@@ -1,0 +1,5 @@
+{
+    "id":"000",
+    "title": "首页",
+    "content": "<div class=\"home-item\"><div class=\"title\">用户数量概况</div><dl><dt><i class=\"layui-icon\">&#xe612;</i>教师用户数</dt><dd>12</dd><dd></dd></dl><dl><dt><i class=\"layui-icon\">&#xe613;</i>普通用户数</dt><dd>789</dd><dd></dd></dl></div><div class=\"home-item\"><div class=\"title\">学校资料</div><div class=\"form-item\"><label class=\"form-label\">学校名称</label></div><div class=\"form-item\"><label class=\"form-label\">学校地址</label></div><div class=\"form-item\"><label class=\"form-label\">联系方式</label></div><div class=\"form-item\"><label class=\"form-label\">电子邮箱</label></div></div><div class=\"home-item\"><div class=\"title\">设备使用概况</div><dl><dt><i class=\"layui-icon\">&#xe612;</i>设备状态</dt><dd>在线/不在线</dd><dd></dd></dl><dl><dt><i class=\"layui-icon\">&#xe612;</i>存储用量</dt><dd>100G/1024G</dd><dd></dd></dl><dl><dt><i class=\"layui-icon\">&#xe612;</i>本地网络</dt><dd><i class=\"layui-icon\">&#xe617;</i></dd><dd></dd></dl><dl><dt><i class=\"layui-icon\">&#xe612;</i>Internet</dt><dd><i class=\"layui-icon\">&#xe617;</i></dd><dd></dd></dl><dl></dl></div>"
+}

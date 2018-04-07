@@ -1,0 +1,40 @@
+/*
+    智慧运动场web后台端
+*/
+/* 首页样式 */
+.layui-body{
+    background-color: #efefef;
+}
+.layui-tab-title .layui-this{
+    background-color: #fff;
+}
+.home-item{
+    background-color: #fff;
+    margin-top: 35px;
+    padding-bottom: 20px;
+    padding-top: 10px;
+}
+.home-item .title{
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+.home-item dl{
+    display: inline-block;
+    margin-left: 30px;
+}
+.home-item dl dt{
+    margin-bottom: 10px;
+}
+.home-item dl dd{
+    margin-left: 10px;
+    font-size: 16px;
+}
+.form-item{
+    margin-bottom: 15px;
+}
+.form-label{
+    max-width: 100px;
+    padding-left: 30px;
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ES6 module test</title>
+</head>
+
+<body>
+
+    <script type="module" src="./helloWord.js" defer></script>
+    <script type="module">
+        import helloWord from "./helloWord.js";
+
+        import { beautiful } from "./helloWord.js";
+
+        // other code
+        helloWord();
+        console.log(beautiful);
+    </script>
+</body>
+
+</html>
